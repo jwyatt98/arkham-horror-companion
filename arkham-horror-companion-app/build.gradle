@@ -2,4 +2,51 @@ plugins {
   id "com.github.node-gradle.node" version "2.2.4"
   id "base"
 }
-assemble.dependsOn yarn_build
+
+task packageArkhamHorrorCompanionApp(type: Zip) {
+    dependsOn yarn_build
+    archiveBaseName = 'arkham-horror-companion-app'
+    archiveExtension = 'jar'
+    destinationDirectory = file("${projectDir}/build_packageArkhamHorrorCompanionApp")
+    from('build') {
+        // optional path under which output will be visible in Java classpath, e.g. static resources path
+        into 'static' 
+    }
+}
+
+configurations {
+    yarnResources
+}
+configurations.default.extendsFrom(configurations.yarnResources)
+
+artifacts {
+    yarnResources(packageArkhamHorrorCompanionApp.archivePath) {
+        builtBy packageArkhamHorrorCompanionApp
+        type "jar"
+    }
+}
+
+
+String testsExecutedMarkerName = "${projectDir}/.tests.executed"
+task test(type: YarnTask) {
+    dependsOn assemble
+    // force Jest test runner to execute tests once and finish the process instead of starting watch mode
+    environment CI: 'true'
+    args = ['run', 'test']
+    inputs.files fileTree('src')
+    inputs.file 'package.json'
+    inputs.file 'yarn.lock'
+    // allows easy triggering re-tests
+    doLast {
+        new File(testsExecutedMarkerName).text = 'delete this file to force re-execution JavaScript tests'
+    }
+    outputs.file testsExecutedMarkerName
+}
+
+clean {
+    delete packageArkhamHorrorCompanionApp.archivePath
+    delete testsExecutedMarkerName
+}
+
+check.dependsOn test
+assemble.dependsOn packageArkhamHorrorCompanionApp
