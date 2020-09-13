@@ -13,30 +13,6 @@ yarn_build {
     outputs.dir 'build'
 }
 
-task packageArkhamHorrorCompanionApp(type: Zip) {
-    dependsOn yarn_build
-    archiveBaseName = 'arkham-horror-companion-app'
-    archiveExtension = 'jar'
-    destinationDirectory = file("${projectDir}/build_packageArkhamHorrorCompanionApp")
-    from('build') {
-        // optional path under which output will be visible in Java classpath, e.g. static resources path
-        into 'static' 
-    }
-}
-
-configurations {
-    yarnResources
-}
-configurations.default.extendsFrom(configurations.yarnResources)
-
-artifacts {
-    yarnResources(packageArkhamHorrorCompanionApp.archivePath) {
-        builtBy packageArkhamHorrorCompanionApp
-        type "jar"
-    }
-}
-
-
 String testsExecutedMarkerName = "${projectDir}/.tests.executed"
 task test(type: YarnTask) {
     dependsOn assemble
@@ -54,9 +30,8 @@ task test(type: YarnTask) {
 }
 
 clean {
-    delete packageArkhamHorrorCompanionApp.archivePath
     delete testsExecutedMarkerName
 }
 
 check.dependsOn test
-assemble.dependsOn packageArkhamHorrorCompanionApp
+assemble.dependsOn yarn_build

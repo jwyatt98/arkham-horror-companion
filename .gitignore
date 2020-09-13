@@ -39,3 +39,9 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 *tests.executed
+
+#Eclipse files
+.project
+.classpath
+/**/bin
+.settings
