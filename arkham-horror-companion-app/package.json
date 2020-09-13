@@ -36,8 +36,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "CI=true yarn test --onlyChanged",
-      "pre-push": "CI=true yarn test --onlyChanged"
+      "pre-commit": "CI=true yarn test --onlyChanged"
     }
   }
 }
