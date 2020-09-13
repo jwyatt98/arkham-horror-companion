@@ -14,12 +14,12 @@ public class ArkhamHorrorCompanionServletContextInitializer implements ServletCo
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		LOGGER.info(() -> "Context Initialized.");
-		ServletContextListener.super.contextInitialized(sce);
+		sce.getServletContext().setAttribute("appName", "Arkham Horror");
 	}
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		LOGGER.info(() -> "Context Destroyed.");
-		ServletContextListener.super.contextDestroyed(sce);
+		sce.getServletContext().removeAttribute("appName");
 	}
 }
