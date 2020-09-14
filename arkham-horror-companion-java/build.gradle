@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'eclipse'
 	id 'war'
+	id 'jacoco'
 }
 
 group = 'com.gilead'
@@ -24,9 +25,24 @@ dependencies {
 	testRuntimeOnly "org.apache.logging.log4j:log4j-jul:2.13.3"
 }
 
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.8000
+			}
+		}
+	}
+}
+
+jacocoTestReport {
+	dependsOn test
+}
+
 test {
 	useJUnitPlatform()
 	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+	finalizedBy jacocoTestReport
 }
 
 war {
