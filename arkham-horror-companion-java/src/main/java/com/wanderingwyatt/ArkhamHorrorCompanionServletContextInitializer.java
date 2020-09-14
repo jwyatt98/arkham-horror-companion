@@ -1,4 +1,4 @@
-package com.gilead.arkhamhorrorcompanion;
+package com.wanderingwyatt;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

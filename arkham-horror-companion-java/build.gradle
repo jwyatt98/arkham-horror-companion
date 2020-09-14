@@ -5,7 +5,7 @@ plugins {
 	id 'jacoco'
 }
 
-group = 'com.gilead'
+group = 'com.wanderingwyatt'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '14'
 

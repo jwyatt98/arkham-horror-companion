@@ -1,4 +1,4 @@
-package com.gilead.arkhamhorrorcompanion;
+package com.wanderingwyatt;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
