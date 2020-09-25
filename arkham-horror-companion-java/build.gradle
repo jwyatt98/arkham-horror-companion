@@ -17,10 +17,26 @@ repositories {
 dependencies {
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
   	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
+
+	// https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+	implementation group: 'org.hibernate', name: 'hibernate-core', version: '6.0.0.Alpha6'
+	// https://mvnrepository.com/artifact/org.ehcache/ehcache
+	implementation group: 'org.ehcache', name: 'ehcache', version: '3.9.0'
+	// https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
+	implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
+	// https://mvnrepository.com/artifact/com.google.dagger/dagger
+	implementation group: 'com.google.dagger', name: 'dagger', version: '2.29.1'
+	// https://mvnrepository.com/artifact/com.google.dagger/dagger-compiler
+	annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '2.29.1'
+	testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '2.29.1'
+	
 	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 	testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.0"
 	testImplementation "org.mockito:mockito-core:2.+"
 	testImplementation "org.mockito:mockito-junit-jupiter:2.+"
+	// https://mvnrepository.com/artifact/com.h2database/h2
+	testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+
 	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"
 	testRuntimeOnly "org.apache.logging.log4j:log4j-jul:2.13.3"
 }
@@ -31,6 +47,20 @@ jacocoTestCoverageVerification {
 			limit {
 				minimum = 0.8000
 			}
+		}
+	}
+}
+
+eclipse {
+	classpath {
+		file.whenMerged { cp ->
+			org.gradle.plugins.ide.eclipse.model.SourceFolder generatedMainSource = new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main', null)
+			generatedMainSource.entryAttributes['ignore_optional_problems'] = 'true'
+			org.gradle.plugins.ide.eclipse.model.SourceFolder generatedTestSource = new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/test', 'bin/generated/test')
+			generatedTestSource.entryAttributes['ignore_optional_problems'] = 'true'
+			generatedTestSource.entryAttributes['test'] = 'true'
+			cp.entries.add(generatedMainSource)
+			cp.entries.add(generatedTestSource)
 		}
 	}
 }
