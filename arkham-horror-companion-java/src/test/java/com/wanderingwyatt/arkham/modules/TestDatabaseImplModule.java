@@ -28,7 +28,8 @@ public class TestDatabaseImplModule {
 		configuration.setProperty("hibernate.current_session_context_class", "thread");
 		configuration.setProperty("show_sql", "true");
 		configuration.setProperty("hibernate.connection.pool_size", "10");
-		
+		configuration.setProperty("hibernate.cache.use_second_level_cache", "false");
+
 		// Add all the annotatedPersistenceClasses
 		annotatedPersistenceClasses.forEach(configuration::addAnnotatedClass);
 		return configuration;

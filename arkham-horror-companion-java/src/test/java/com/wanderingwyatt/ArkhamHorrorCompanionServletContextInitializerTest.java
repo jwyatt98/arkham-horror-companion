@@ -6,7 +6,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,6 +17,7 @@ import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTest
 import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
 
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(OrderAnnotation.class)
 class ArkhamHorrorCompanionServletContextInitializerTest {
 	@Mock static ServletContextEvent sce;
 	@Mock static ServletContext sc;
@@ -32,12 +36,14 @@ class ArkhamHorrorCompanionServletContextInitializerTest {
 	}
 	
 	@Test
+	@Order(1)
 	void testContextInitialized() {		
 		contextInitializer.contextInitialized(sce);
 		verify(sc).setAttribute("appName", "Arkham Horror");
 	}
 
 	@Test
+	@Order(2)
 	void testContextDestroyed() {
 		contextInitializer.contextDestroyed(sce);
 		verify(sc).removeAttribute("appName");
