@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cache.jcache.ConfigSettings;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
+import com.wanderingwyatt.arkham.server.ServerConfig;
 import dagger.Module;
 import dagger.Provides;
 
@@ -19,14 +20,15 @@ public class DatabaseImplModule {
 	@Provides
 	@Named("configuration")
 	Configuration provideConfiguration(@Named("annotatedPersistenceClasses") Set<Class<?>> annotatedPersistenceClasses, 
-			CacheConfigurer cacheConfigurer) {
+			CacheConfigurer cacheConfigurer,
+			ServerConfig serverConfig) {
 		
 		// Configure all the caches before configuring hibernate for caching.
 		cacheConfigurer.configure();
 		
 		Configuration configuration = new Configuration();
 		configuration.setProperty(AvailableSettings.DATASOURCE, "java:comp/env/jdbc/arkhamHorrorDb");
-		configuration.setProperty(AvailableSettings.DIALECT, "org.hibernate.dialect.H2Dialect");
+		configuration.setProperty(AvailableSettings.DIALECT, serverConfig.databaseDialect());
 		configuration.setProperty(AvailableSettings.HBM2DDL_AUTO, "update");
 		configuration.setProperty(AvailableSettings.SHOW_SQL, "true");
 		configuration.setProperty(AvailableSettings.USE_SECOND_LEVEL_CACHE, "true");

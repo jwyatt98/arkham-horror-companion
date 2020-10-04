@@ -1,6 +1,6 @@
-package com.wanderingwyatt;
+package com.wanderingwyatt.arkham.server;
 
-import static com.wanderingwyatt.ArkhamHorrorCompanionServletContextInitializer.APPLICATION_COMPONENT;
+import static com.wanderingwyatt.arkham.server.ArkhamHorrorCompanionServletContextInitializer.APPLICATION_COMPONENT;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
