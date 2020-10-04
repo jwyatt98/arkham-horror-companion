@@ -9,7 +9,6 @@ import dagger.Provides;
 
 @Module
 public class TestDatabaseImplModule {
-	
 	@Provides
 	SessionFactory createTestEntityManagerFactor(@Named("testConfiguration") Configuration configuration) {
 		return configuration.buildSessionFactory();

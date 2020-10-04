@@ -8,7 +8,6 @@ import dagger.Provides;
 
 @Module(subcomponents = TestDatabaseComponent.class)
 public class TestDatabaseModule {
-	
 	@Provides
 	@Singleton
 	EntityManagerFactory provideEntityManagerFactory(TestDatabaseComponent.Builder databaseComponentBuilder) {
