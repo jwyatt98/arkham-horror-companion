@@ -50,16 +50,6 @@ dependencies {
 	testRuntimeOnly "org.apache.logging.log4j:log4j-jul:2.13.3"
 }
 
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			limit {
-				minimum = 0.8000
-			}
-		}
-	}
-}
-
 eclipse {
 	classpath {
 		file.whenMerged { cp ->
@@ -74,8 +64,35 @@ eclipse {
 	}
 }
 
+ext {
+	jacocoExclusions = ['**/com/wanderingwyatt/arkham/modules/**',
+						'**/com/wanderingwyatt/arkham/components/**',
+						'**/com/wanderingwyatt/arkham/**/*Exception*']
+}
+
 jacocoTestReport {
 	dependsOn test
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+        	fileTree(dir: it, exclude: jacocoExclusions)
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.8000
+			}
+		}
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+        	fileTree(dir: it, exclude: jacocoExclusions)
+        }))
+    }
 }
 
 test {
