@@ -1,7 +1,10 @@
 package com.wanderingwyatt;
 
+import static com.wanderingwyatt.ArkhamHorrorCompanionServletContextInitializer.APPLICATION_COMPONENT;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
 import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
 import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
 
@@ -39,13 +43,16 @@ class ArkhamHorrorCompanionServletContextInitializerTest {
 	@Order(1)
 	void testContextInitialized() {		
 		contextInitializer.contextInitialized(sce);
-		verify(sc).setAttribute("appName", "Arkham Horror");
+		verify(sc).setAttribute(APPLICATION_COMPONENT, ArkhamHorrorApplicationComponent.getInstance());
 	}
 
 	@Test
 	@Order(2)
 	void testContextDestroyed() {
+		when(sc.getAttribute(APPLICATION_COMPONENT)).thenReturn(ArkhamHorrorApplicationComponent.getInstance());
 		contextInitializer.contextDestroyed(sce);
-		verify(sc).removeAttribute("appName");
+		verify(sc).getAttribute(APPLICATION_COMPONENT);
+		EntityManagerFactory entityManagerFactory = ArkhamHorrorApplicationComponent.getInstance().entityManagerFactory().get();
+		assertFalse(entityManagerFactory.isOpen());
 	}
 }
