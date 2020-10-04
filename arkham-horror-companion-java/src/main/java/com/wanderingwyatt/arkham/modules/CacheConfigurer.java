@@ -7,11 +7,10 @@ import javax.cache.expiry.EternalExpiryPolicy;
 import javax.cache.spi.CachingProvider;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import com.wanderingwyatt.game.components.Investigator;
+import com.wanderingwyatt.arkham.game.components.Investigator;
 
 @Singleton
 public class CacheConfigurer {
-	
 	@Inject
 	public CacheConfigurer() {
 		// Injectable constructor
