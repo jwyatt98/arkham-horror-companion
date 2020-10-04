@@ -1,4 +1,4 @@
-package com.wanderingwyatt;
+package com.wanderingwyatt.arkham.server;
 
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContextEvent;
