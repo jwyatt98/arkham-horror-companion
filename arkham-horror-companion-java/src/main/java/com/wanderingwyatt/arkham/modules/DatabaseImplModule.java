@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cache.jcache.ConfigSettings;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
+import com.wanderingwyatt.arkham.modules.generated.CacheConfigurer;
 import com.wanderingwyatt.arkham.server.ServerConfig;
 import dagger.Module;
 import dagger.Provides;

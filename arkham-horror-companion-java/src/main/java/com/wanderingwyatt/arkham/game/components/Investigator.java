@@ -10,10 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
 
 @Entity
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "investigator-cache")
+@CacheConfiguration(cacheName = "investigator-cache", key = Integer.class)
 public class Investigator {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
