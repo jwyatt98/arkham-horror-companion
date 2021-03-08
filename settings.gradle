@@ -8,3 +8,5 @@ pluginManagement {
 rootProject.name = 'arkham-horror-companion'
 include 'arkham-horror-companion-java'
 include 'arkham-horror-companion-app'
+include 'arkham-horror-companion-annotations'
+include 'arkham-horror-companion-annotation-processor'

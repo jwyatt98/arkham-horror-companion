@@ -1,0 +1,40 @@
+package $packageName;
+
+import javax.cache.*;
+import javax.cache.configuration.*;
+import javax.cache.expiry.*;
+import javax.inject.*;
+import javax.cache.spi.*;
+#foreach ( $class in $classImports )
+import ${class};
+#end
+
+@Singleton
+public class CacheConfigurer {
+	@Inject
+	public CacheConfigurer() {
+		// Injectable constructor
+	}
+	
+	public void configure() {
+		// configure each cache
+		CachingProvider provider = Caching.getCachingProvider();
+		CacheManager cacheManager = provider.getCacheManager();
+		#foreach ( $cacheInfo in $cacheInformation )
+		configure${cacheInfo.cacheType}Cache(cacheManager);
+		#end	
+	}
+	
+	#foreach ( $cacheInfo in $cacheInformation )
+	private void configure${cacheInfo.cacheType}Cache(CacheManager cacheManager) {
+		MutableConfiguration<${cacheInfo.keyType},${cacheInfo.cacheType}> mutableConfiguration = new MutableConfiguration<${cacheInfo.keyType},${cacheInfo.cacheType}>()
+			.setTypes(${cacheInfo.keyType}.class,${cacheInfo.cacheType}.class)
+			#if( $cacheInfo.expiryPolicy == "ETERNAL" )
+			.setExpiryPolicyFactory(EternalExpiryPolicy.factoryOf());
+			#else
+			.setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(new Duration(java.util.concurrent.TimeUnit.${cacheInfo.timeUnit}, $cacheInfo.length)));
+			#end
+		cacheManager.createCache("${cacheInfo.cacheName}", mutableConfiguration);
+	}
+	#end
+}
