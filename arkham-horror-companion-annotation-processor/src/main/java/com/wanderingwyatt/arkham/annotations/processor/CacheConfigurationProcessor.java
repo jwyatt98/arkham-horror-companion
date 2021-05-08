@@ -62,7 +62,6 @@ public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProce
 					cacheInformation.setExpiryPolicy(cacheConfigurationAnnotation.expiryPolicy());
 					cacheInformation.timeUnit = cacheConfigurationAnnotation.timeUnit();
 					cacheInformation.length = cacheConfigurationAnnotation.length();
-					processingEnv.getMessager().printMessage(Kind.WARNING, "Cacheable Element: " + cacheableElement);
 					cacheTypes.add(cacheInformation);
 				});
 				
@@ -71,7 +70,6 @@ public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProce
 			
 			try {
 				JavaFileObject cacheConfigurerJavaFile = processingEnv.getFiler().createSourceFile(packageLocation + ".CacheConfigurer");
-				processingEnv.getMessager().printMessage(Kind.WARNING, "We did it");
 				Writer writer = cacheConfigurerJavaFile.openWriter();
 				cacheTemplate.merge(cacheContext, writer);
 				writer.flush();
