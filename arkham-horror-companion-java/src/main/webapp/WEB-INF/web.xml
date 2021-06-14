@@ -9,5 +9,6 @@
 		<res-ref-name>jdbc/arkhamHorrorDb</res-ref-name>
 		<res-type>javax.sql.DataSource</res-type>
 		<res-auth>Container</res-auth>
+		<res-sharing-scope>Unshareable</res-sharing-scope>
 	</resource-ref>
 </web-app>
