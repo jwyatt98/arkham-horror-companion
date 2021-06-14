@@ -15,19 +15,19 @@ import javax.lang.model.util.Types;
 
 public abstract class BaseArkhamHorrorAnnotationProcessor extends AbstractProcessor {
 
-	public Optional<? extends AnnotationMirror> getAnnotationMirror(final Element element, final Class<? extends Annotation> annotationClass) {
+	public Optional<AnnotationMirror> getAnnotationMirror(final Element element, final Class<? extends Annotation> annotationClass) {
 	    final var annotationClassName = annotationClass.getName();
 	    return element.getAnnotationMirrors().stream()
-	        .filter( m -> m.getAnnotationType().toString().equals( annotationClassName ) )
+	        .filter( m -> m.getAnnotationType().toString().equals( annotationClassName )).map(AnnotationMirror.class::cast)
 	        .findFirst();
 	}
 
-	public Optional<? extends AnnotationValue> getAnnotationValue(final AnnotationMirror annotationMirror, final String name)	{
+	public Optional<AnnotationValue> getAnnotationValue(final AnnotationMirror annotationMirror, final String name)	{
 	    final Elements elementUtils = this.processingEnv.getElementUtils();
 	    final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = elementUtils.getElementValuesWithDefaults( annotationMirror );
 	    return elementValues.keySet().stream()
 	        .filter( k -> k.getSimpleName().toString().equals(name))
-	        .map(elementValues::get)
+	        .map(elementValues::get).map(AnnotationValue.class::cast)
 	        .findAny();
 	}
 
