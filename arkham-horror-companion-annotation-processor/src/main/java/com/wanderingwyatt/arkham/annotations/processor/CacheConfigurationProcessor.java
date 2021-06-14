@@ -46,11 +46,8 @@ public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProce
 			for (TypeElement annotation : annotations) {
 				Set<? extends Element> cacheableElements = roundEnv.getElementsAnnotatedWith(annotation);
 				
-				Set<String> classImports = cacheableElements.stream().map(cacheableElement -> {
-					String className = ((TypeElement) cacheableElement).getQualifiedName().toString();
-					processingEnv.getMessager().printMessage(Kind.WARNING, "className: " + className);
-					return className;
-				}).collect(Collectors.toSet());
+				Set<String> classImports = cacheableElements.stream().map(cacheableElement -> ((TypeElement) cacheableElement).getQualifiedName().toString())
+					.collect(Collectors.toSet());
 				Set<CacheInformation> cacheTypes = new HashSet<>();
 				cacheContext.put("classImports", classImports);
 				cacheableElements.forEach(cacheableElement -> {
