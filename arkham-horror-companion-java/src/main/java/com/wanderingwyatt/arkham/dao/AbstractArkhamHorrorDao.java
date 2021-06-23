@@ -11,7 +11,7 @@ public abstract class AbstractArkhamHorrorDao<T, K> {
 	private Lazy<EntityManagerFactory> entityManagerFactory;
 	
 	@SuppressWarnings("unchecked")
-	public AbstractArkhamHorrorDao(Lazy<EntityManagerFactory> entityManagerFactory) {
+	protected AbstractArkhamHorrorDao(Lazy<EntityManagerFactory> entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
 		this.reference = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
