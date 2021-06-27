@@ -1,4 +1,4 @@
-package com.wanderingwyatt.arkham.game.components;
+package com.wanderingwyatt.arkham.dao;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -6,9 +6,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wanderingwyatt.arkham.game.components.SkillTrack;
 
 @Converter
 public class SkillTrackConverter implements AttributeConverter<SkillTrack, String> {
+	private static final String ERROR_WHILE_TRYING_TO_CONVERT_SKILL_TRACK_OBJECT_TO_JSON = "Error while trying to convert skill track object to json.";
+	private static final String ERROR_WHILE_TRYING_TO_CONVERT_JSON_INTO_SKILL_TRACK_OBJECT = "Error while trying to convert json into skill track object.";
 	private static final Logger LOGGER = LogManager.getLogger(SkillTrackConverter.class);
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	
@@ -22,7 +25,8 @@ public class SkillTrackConverter implements AttributeConverter<SkillTrack, Strin
 		try {
 			skillTrackJson = objectMapper.writeValueAsString(attribute);
 		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while trying to convert skill track object to json.", e);
+			LOGGER.error(ERROR_WHILE_TRYING_TO_CONVERT_SKILL_TRACK_OBJECT_TO_JSON, e);
+			throw new ConversionException(ERROR_WHILE_TRYING_TO_CONVERT_SKILL_TRACK_OBJECT_TO_JSON, e);
 		}
 		return skillTrackJson;
 	}
@@ -33,7 +37,8 @@ public class SkillTrackConverter implements AttributeConverter<SkillTrack, Strin
 		try {
 			skillTrack = objectMapper.readValue(dbData, SkillTrack.class);
 		} catch (JsonProcessingException e) {
-			LOGGER.error("Error while trying to convert json into skill track object.", e);
+			LOGGER.error(ERROR_WHILE_TRYING_TO_CONVERT_JSON_INTO_SKILL_TRACK_OBJECT, e);
+			throw new ConversionException(ERROR_WHILE_TRYING_TO_CONVERT_JSON_INTO_SKILL_TRACK_OBJECT, e);
 		}
 		return skillTrack;
 	}

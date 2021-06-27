@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
+import com.wanderingwyatt.arkham.dao.SkillTrackConverter;
 
 @Entity
 @Cacheable
