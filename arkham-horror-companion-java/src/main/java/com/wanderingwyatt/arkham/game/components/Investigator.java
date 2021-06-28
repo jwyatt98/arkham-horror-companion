@@ -6,9 +6,6 @@ import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
@@ -18,10 +15,7 @@ import com.wanderingwyatt.arkham.dao.SkillTrackConverter;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "investigator-cache")
 @CacheConfiguration(cacheName = "investigator-cache", key = Integer.class)
-public class Investigator {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class Investigator extends GameComponent {
 	
 	@Column(unique = true)
 	private String name;
@@ -37,6 +31,7 @@ public class Investigator {
 	@Generated("SparkTools")
 	private Investigator(Builder builder) {
 		this.id = builder.id;
+		this.expansion = builder.expansion;
 		this.name = builder.name;
 		this.title = builder.title;
 		this.health = builder.health;
@@ -48,10 +43,6 @@ public class Investigator {
 
 	protected Investigator() {
 		// protected default constructor
-	}
-
-	public Integer getId() {
-		return id;
 	}
 
 	public String getName() {
@@ -78,10 +69,6 @@ public class Investigator {
 		return home;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -105,31 +92,34 @@ public class Investigator {
 	public void setHome(String home) {
 		this.home = home;
 	}
-	
-	@Override
-	public String toString() {
-		return "Investigator [id=" + id + ", name=" + name + ", title=" + title + ", health=" + health + ", sanity="
-				+ sanity + ", focus=" + focus + ", home=" + home + ", skillTrack=" + skillTrack + "]";
-	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(focus, health, home, id, name, sanity, skillTrack, title);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(focus, health, home, name, sanity, skillTrack, title);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		Investigator other = (Investigator) obj;
 		return Objects.equals(focus, other.focus) && Objects.equals(health, other.health)
-				&& Objects.equals(home, other.home) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(home, other.home) && Objects.equals(name, other.name)
 				&& Objects.equals(sanity, other.sanity) && Objects.equals(skillTrack, other.skillTrack)
 				&& Objects.equals(title, other.title);
+	}
+	
+	@Override
+	public String toString() {
+		return "Investigator [name=" + name + ", title=" + title + ", health=" + health + ", sanity=" + sanity
+				+ ", focus=" + focus + ", home=" + home + ", skillTrack=" + skillTrack + ", id=" + id + ", expansion=" + expansion + "]";
 	}
 
 	/**
@@ -147,6 +137,8 @@ public class Investigator {
 	@Generated("SparkTools")
 	public static final class Builder {
 		private Integer id;
+		private Integer version;
+		private String expansion;
 		private String name;
 		private String title;
 		private Integer health;
@@ -160,6 +152,16 @@ public class Investigator {
 
 		public Builder withId(Integer id) {
 			this.id = id;
+			return this;
+		}
+
+		public Builder withVersion(Integer version) {
+			this.version = version;
+			return this;
+		}
+
+		public Builder withExpansion(String expansion) {
+			this.expansion = expansion;
 			return this;
 		}
 

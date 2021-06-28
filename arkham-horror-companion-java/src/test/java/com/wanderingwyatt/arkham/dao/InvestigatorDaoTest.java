@@ -38,6 +38,7 @@ class InvestigatorDaoTest {
 			.build();
 		
 		investigator = Investigator.builder()
+			.withExpansion("ArkhamHorror")
 			.withName("Gloria Goldberg")
 			.withTitle("The Author")
 			.withFocus(2)
