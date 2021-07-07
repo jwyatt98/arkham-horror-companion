@@ -119,7 +119,7 @@ public class Investigator extends GameComponent {
 	@Override
 	public String toString() {
 		return "Investigator [name=" + name + ", title=" + title + ", health=" + health + ", sanity=" + sanity
-				+ ", focus=" + focus + ", home=" + home + ", skillTrack=" + skillTrack + ", id=" + id + ", expansion=" + expansion + "]";
+				+ ", focus=" + focus + ", home=" + home + ", skillTrack=" + skillTrack + ", id=" + id + "]";
 	}
 
 	/**
@@ -137,8 +137,7 @@ public class Investigator extends GameComponent {
 	@Generated("SparkTools")
 	public static final class Builder {
 		private Integer id;
-		private Integer version;
-		private String expansion;
+		private Expansion expansion;
 		private String name;
 		private String title;
 		private Integer health;
@@ -155,12 +154,7 @@ public class Investigator extends GameComponent {
 			return this;
 		}
 
-		public Builder withVersion(Integer version) {
-			this.version = version;
-			return this;
-		}
-
-		public Builder withExpansion(String expansion) {
+		public Builder withExpansion(Expansion expansion) {
 			this.expansion = expansion;
 			return this;
 		}

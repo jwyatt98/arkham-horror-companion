@@ -15,19 +15,22 @@ import org.junit.jupiter.api.TestMethodOrder;
 import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
 import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
 import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
+import com.wanderingwyatt.arkham.game.components.Expansion;
 import com.wanderingwyatt.arkham.game.components.Investigator;
 import com.wanderingwyatt.arkham.game.components.SkillTrack;
 
 @TestMethodOrder(OrderAnnotation.class)
 class InvestigatorDaoTest {
 	static InvestigatorDao investigatorDao;
+	static ExpansionDao expansionDao;
 	static Investigator investigator;
+	private static Expansion expansion;
 	
 	@BeforeAll
 	static void setUp() throws Exception {
 		ArkhamHorrorApplicationComponentTestBridge.setInstance(DaggerTestApplicationComponent.create());
 		investigatorDao = ArkhamHorrorApplicationComponent.getInstance().investigatorDao();
-
+		expansionDao = ArkhamHorrorApplicationComponent.getInstance().expansionDao();
 		SkillTrack skillTrack = SkillTrack.builder()
 			.withSpeed(new ArrayList<Integer>(Arrays.asList(1,2,3,4)))
 			.withSneak(new ArrayList<Integer>(Arrays.asList(3,2,1,0)))
@@ -37,8 +40,12 @@ class InvestigatorDaoTest {
 			.withLuck(new ArrayList<Integer>(Arrays.asList(5,4,3,2)))
 			.build();
 		
+		expansion = Expansion.builder()
+				.withName("Arkham Horror")
+				.build();
+		
 		investigator = Investigator.builder()
-			.withExpansion("ArkhamHorror")
+			.withExpansion(expansion)
 			.withName("Gloria Goldberg")
 			.withTitle("The Author")
 			.withFocus(2)
@@ -47,11 +54,14 @@ class InvestigatorDaoTest {
 			.withHome("Velma's Diner")
 			.withSkillTrack(skillTrack)
 			.build();
+		
+		expansion.addInvestigator(investigator);
 	}
 
 	@Test
 	@Order(1)
 	void testPersist() throws Exception {
+		expansionDao.persist(expansion);
 		investigatorDao.persist(investigator);
 		assertNotNull(investigator.getId());
 	}
@@ -67,6 +77,15 @@ class InvestigatorDaoTest {
 	
 	@Test
 	@Order(3)
+	void testFindByEntityGraph() throws Exception {
+		Investigator investigatorFound = investigatorDao.findByEntityGraph(investigator.getId());
+		assertEquals(investigator, investigatorFound);
+		assertEquals(investigator.hashCode(), investigatorFound.hashCode());
+		assertNotSame(investigator, investigatorFound);
+	}
+	
+	@Test
+	@Order(4)
 	void testMerge() throws Exception {
 		investigator.setHealth(10);
 		Investigator mergedInvestigator = investigatorDao.merge(investigator);
@@ -76,14 +95,14 @@ class InvestigatorDaoTest {
 	}
 	
 	@Test
-	@Order(4)
+	@Order(5)
 	void testNotFound() throws Exception {
 		Investigator exceptionOrNull = investigatorDao.find(7);
 		assertNull(exceptionOrNull);
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	void testPersistException() throws Exception {
 		assertThrows(ArkhamHorrorDaoException.class, () -> {
 			investigatorDao.persist(investigator);
