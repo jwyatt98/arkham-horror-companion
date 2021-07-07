@@ -1,10 +1,12 @@
 package com.wanderingwyatt.arkham.game.components;
 
 import java.util.Objects;
-import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
@@ -17,8 +19,9 @@ public class GameComponent {
 	@Version
 	private Integer version;
 	
-	@Column(nullable = false)
-	protected String expansion;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="expansion_id", referencedColumnName = "id", nullable = false)
+	protected Expansion expansion;
 
 	public void setId(Integer id) {
 		this.id = id;
@@ -32,17 +35,17 @@ public class GameComponent {
 		return version;
 	}
 	
-	public void setExpansion(String expansion) {
+	public void setExpansion(Expansion expansion) {
 		this.expansion = expansion;
 	}
 	
-	public String getExpansion() {
+	public Expansion getExpansion() {
 		return expansion;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(expansion, id, version);
+		return Objects.hash(expansion, version);
 	}
 
 	@Override
@@ -55,10 +58,5 @@ public class GameComponent {
 			return false;
 		GameComponent other = (GameComponent) obj;
 		return Objects.equals(expansion, other.expansion) && Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		return "GameComponent [id=" + id + ", expansion=" + expansion + "]";
 	}
 }
