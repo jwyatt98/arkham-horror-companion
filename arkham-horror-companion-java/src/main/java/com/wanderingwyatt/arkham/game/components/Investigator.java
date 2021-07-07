@@ -30,7 +30,6 @@ public class Investigator extends GameComponent {
 
 	@Generated("SparkTools")
 	private Investigator(Builder builder) {
-		this.id = builder.id;
 		this.expansion = builder.expansion;
 		this.name = builder.name;
 		this.title = builder.title;
@@ -136,7 +135,6 @@ public class Investigator extends GameComponent {
 	 */
 	@Generated("SparkTools")
 	public static final class Builder {
-		private Integer id;
 		private Expansion expansion;
 		private String name;
 		private String title;
@@ -147,11 +145,6 @@ public class Investigator extends GameComponent {
 		private SkillTrack skillTrack;
 
 		private Builder() {
-		}
-
-		public Builder withId(Integer id) {
-			this.id = id;
-			return this;
 		}
 
 		public Builder withExpansion(Expansion expansion) {
