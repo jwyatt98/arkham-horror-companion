@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -43,12 +44,12 @@ class InvestigatorDaoTest {
 			.build();
 		
 		expansion = Expansion.builder()
-				.withName("Arkham Horror")
+				.withName("Investigator Expansion 1")
 				.build();
 		
 		investigator = Investigator.builder()
 			.withExpansion(expansion)
-			.withName("Gloria Goldberg")
+			.withName("Investigator Test 1")
 			.withTitle("The Author")
 			.withFocus(2)
 			.withHealth(4)
@@ -59,12 +60,16 @@ class InvestigatorDaoTest {
 		
 		expansion.addInvestigator(investigator);
 	}
+	
+	@AfterAll
+	static void tearDown() throws Exception {
+		expansionDao.remove(expansion);
+	}
 
 	@Test
 	@Order(1)
 	void testPersist() throws Exception {
 		expansionDao.persist(expansion);
-		investigatorDao.persist(investigator);
 		assertNotNull(investigator.getId());
 	}
 
