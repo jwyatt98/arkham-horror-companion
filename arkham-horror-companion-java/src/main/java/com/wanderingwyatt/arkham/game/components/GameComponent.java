@@ -11,7 +11,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public class GameComponent {
+public class GameComponent implements Identifiable<Integer>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Integer id;
@@ -27,6 +27,7 @@ public class GameComponent {
 		this.id = id;
 	}
 	
+	@Override
 	public Integer getId() {
 		return id;
 	}

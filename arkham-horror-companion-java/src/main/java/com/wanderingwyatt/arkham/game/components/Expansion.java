@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.annotation.Generated;
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +20,7 @@ import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "expansion-cache")
 @CacheConfiguration(cacheName = "expansion-cache", key = Integer.class)
-public class Expansion {
+public class Expansion implements Identifiable<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,7 @@ public class Expansion {
 	@Column(unique = true)
 	private String name;
 	
-	@OneToMany(mappedBy = "expansion" )
+	@OneToMany(mappedBy = "expansion", cascade = CascadeType.ALL, orphanRemoval = true)
 	List<Investigator> investigators = new ArrayList<>();
 
 	@Generated("SparkTools")
@@ -43,6 +44,10 @@ public class Expansion {
 	
 	public void removeInvestigator(Investigator investigator) {
 		investigators.remove(investigator);
+	}
+	
+	public Integer getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -100,7 +105,7 @@ public class Expansion {
 		}
 
 		public Builder withInvestigators(List<Investigator> investigators) {
-			this.investigators = investigators;
+			this.investigators.addAll(investigators);
 			return this;
 		}
 

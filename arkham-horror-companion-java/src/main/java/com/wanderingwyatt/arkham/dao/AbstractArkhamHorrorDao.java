@@ -3,13 +3,15 @@ package com.wanderingwyatt.arkham.dao;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import com.wanderingwyatt.arkham.game.components.Identifiable;
 import dagger.Lazy;
 
-public abstract class AbstractArkhamHorrorDao<T, K> {
+public abstract class AbstractArkhamHorrorDao<T extends Identifiable<K>, K> {
 	private Class<T> reference;
 	private Lazy<EntityManagerFactory> entityManagerFactory;
 	
@@ -35,6 +37,16 @@ public abstract class AbstractArkhamHorrorDao<T, K> {
 		return performInTransaction(entityManager -> entityManager.find(reference, id));
 	}
 	
+	public Class<Void> remove(T t) throws ArkhamHorrorDaoException {
+		return performInTransaction(entityManager -> {
+			Optional<T> foundEntity = Optional.ofNullable(entityManager.find(reference, t.getId()));
+			if(foundEntity.isPresent()) {
+				entityManager.remove(foundEntity.get());
+			}
+			return Void.TYPE;
+		});
+	}
+	
 	public T findByEntityGraph(K id) {
 		EntityManager entityManager = entityManagerFactory.get().createEntityManager();
 		EntityGraph<T> entityGraph = entityManager.createEntityGraph(this.reference);
@@ -44,7 +56,7 @@ public abstract class AbstractArkhamHorrorDao<T, K> {
 		return entityManager.find(this.reference, id, properties);
 	}
 	
-	protected T performInTransaction(Function<EntityManager, T> work) throws ArkhamHorrorDaoException {
+	protected <R> R performInTransaction(Function<EntityManager, R> work) throws ArkhamHorrorDaoException {
 		EntityManager entityManager = entityManagerFactory.get().createEntityManager();
 		try {
 			entityManager.getTransaction().begin();
