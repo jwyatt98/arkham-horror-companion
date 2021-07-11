@@ -1,4 +1,4 @@
-package com.wanderingwyatt.arkham.dao;
+package com.wanderingwyatt.arkham.dao.converter;
 
 public class ConversionException extends RuntimeException {
 

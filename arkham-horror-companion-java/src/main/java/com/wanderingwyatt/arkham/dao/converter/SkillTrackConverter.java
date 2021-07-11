@@ -1,4 +1,4 @@
-package com.wanderingwyatt.arkham.dao;
+package com.wanderingwyatt.arkham.dao.converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
