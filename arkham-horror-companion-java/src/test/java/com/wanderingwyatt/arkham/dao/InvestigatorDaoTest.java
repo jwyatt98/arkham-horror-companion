@@ -21,6 +21,8 @@ import com.wanderingwyatt.arkham.game.components.SkillTrack;
 
 @TestMethodOrder(OrderAnnotation.class)
 class InvestigatorDaoTest {
+	private static final String SCIENCE_BUILDING = "Science Building";
+	private static final String VELMA_S_DINER = "Velma's Diner";
 	static InvestigatorDao investigatorDao;
 	static ExpansionDao expansionDao;
 	static Investigator investigator;
@@ -51,7 +53,7 @@ class InvestigatorDaoTest {
 			.withFocus(2)
 			.withHealth(4)
 			.withSanity(6)
-			.withHome("Velma's Diner")
+			.withHome(VELMA_S_DINER)
 			.withSkillTrack(skillTrack)
 			.build();
 		
@@ -107,5 +109,29 @@ class InvestigatorDaoTest {
 		assertThrows(ArkhamHorrorDaoException.class, () -> {
 			investigatorDao.persist(investigator);
 		});
+	}
+	
+	@Test
+	@Order(7)
+	void testBuilderPattern() {
+		assertEquals(2, investigator.getFocus());
+		investigator.setFocus(4);
+		assertEquals(4, investigator.getFocus());
+		
+		assertEquals(10, investigator.getHealth());
+		investigator.setHealth(3);
+		assertEquals(3, investigator.getHealth());
+		
+		assertEquals(6, investigator.getSanity());
+		investigator.setSanity(7);
+		assertEquals(7, investigator.getSanity());
+
+		assertEquals(VELMA_S_DINER, investigator.getHome());
+		investigator.setHome(SCIENCE_BUILDING);
+		assertEquals(SCIENCE_BUILDING, investigator.getHome());
+		
+		assertEquals("The Author", investigator.getTitle());
+		investigator.setTitle("The Writer");
+		assertEquals("The Writer", investigator.getTitle());
 	}
 }
