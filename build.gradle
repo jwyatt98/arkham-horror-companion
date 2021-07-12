@@ -1,6 +1,6 @@
 defaultTasks 'build'
 wrapper {
     description "Regenerates the Gradle Wrapper files"
-    gradleVersion = '6.6.1'
-    distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+    gradleVersion = '7.1.1'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
