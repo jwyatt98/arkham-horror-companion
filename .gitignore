@@ -48,3 +48,6 @@ gradle-app.setting
 
 #Mac files
 .DS_Store
+
+#VS Code Folder
+.vscode
