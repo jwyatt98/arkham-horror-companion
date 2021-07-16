@@ -5,6 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
+import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
+import com.wanderingwyatt.arkham.game.components.Expansion;
+import com.wanderingwyatt.arkham.game.components.Investigator;
+import com.wanderingwyatt.arkham.game.components.SkillTrack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.jupiter.api.AfterAll;
@@ -13,15 +20,11 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
-import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
-import com.wanderingwyatt.arkham.game.components.Expansion;
-import com.wanderingwyatt.arkham.game.components.Investigator;
-import com.wanderingwyatt.arkham.game.components.SkillTrack;
 
 @TestMethodOrder(OrderAnnotation.class)
 class InvestigatorDaoTest {
+	private static final String THE_WRITER = "The Writer";
+	private static final String THE_AUTHOR = "The Author";
 	private static final String SCIENCE_BUILDING = "Science Building";
 	private static final String VELMA_S_DINER = "Velma's Diner";
 	static InvestigatorDao investigatorDao;
@@ -50,7 +53,7 @@ class InvestigatorDaoTest {
 		investigator = Investigator.builder()
 			.withExpansion(expansion)
 			.withName("Investigator Test 1")
-			.withTitle("The Author")
+			.withTitle(THE_AUTHOR)
 			.withFocus(2)
 			.withHealth(4)
 			.withSanity(6)
@@ -135,8 +138,8 @@ class InvestigatorDaoTest {
 		investigator.setHome(SCIENCE_BUILDING);
 		assertEquals(SCIENCE_BUILDING, investigator.getHome());
 		
-		assertEquals("The Author", investigator.getTitle());
-		investigator.setTitle("The Writer");
-		assertEquals("The Writer", investigator.getTitle());
+		assertEquals(THE_AUTHOR, investigator.getTitle());
+		investigator.setTitle(THE_WRITER);
+		assertEquals(THE_WRITER, investigator.getTitle());
 	}
 }

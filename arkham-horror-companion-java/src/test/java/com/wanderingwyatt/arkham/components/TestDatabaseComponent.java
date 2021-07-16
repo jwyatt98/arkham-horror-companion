@@ -1,9 +1,9 @@
 package com.wanderingwyatt.arkham.components;
 
-import org.hibernate.SessionFactory;
-import com.wanderingwyatt.arkham.modules.TestDatabaseImplModule;
 import com.wanderingwyatt.arkham.modules.HibernateBaseModule;
+import com.wanderingwyatt.arkham.modules.TestDatabaseImplModule;
 import dagger.Subcomponent;
+import org.hibernate.SessionFactory;
 
 @Subcomponent(modules = {TestDatabaseImplModule.class, HibernateBaseModule.class})
 public interface TestDatabaseComponent {

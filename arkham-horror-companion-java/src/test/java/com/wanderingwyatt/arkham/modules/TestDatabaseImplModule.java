@@ -1,11 +1,11 @@
 package com.wanderingwyatt.arkham.modules;
 
+import dagger.Module;
+import dagger.Provides;
 import java.util.Set;
 import javax.inject.Named;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import dagger.Module;
-import dagger.Provides;
 
 @Module
 public class TestDatabaseImplModule {
