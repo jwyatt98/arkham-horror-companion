@@ -1,5 +1,7 @@
 package com.wanderingwyatt.arkham.dao;
 
+import com.wanderingwyatt.arkham.game.components.Identifiable;
+import dagger.Lazy;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +10,6 @@ import java.util.function.Function;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import com.wanderingwyatt.arkham.game.components.Identifiable;
-import dagger.Lazy;
 
 public abstract class AbstractArkhamHorrorDao<T extends Identifiable<K>, K> {
 	private Class<T> reference;

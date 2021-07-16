@@ -1,12 +1,12 @@
 package com.wanderingwyatt.arkham.dao.converter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wanderingwyatt.arkham.game.components.SkillTrack;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wanderingwyatt.arkham.game.components.SkillTrack;
 
 @Converter
 public class SkillTrackConverter implements AttributeConverter<SkillTrack, String> {

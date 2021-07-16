@@ -1,12 +1,12 @@
 package com.wanderingwyatt.arkham.modules;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.inject.Named;
 import com.wanderingwyatt.arkham.game.components.Expansion;
 import com.wanderingwyatt.arkham.game.components.Investigator;
 import dagger.Module;
 import dagger.Provides;
+import java.util.HashSet;
+import java.util.Set;
+import javax.inject.Named;
 
 @Module
 public class HibernateBaseModule {

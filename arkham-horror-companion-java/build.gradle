@@ -3,6 +3,7 @@ plugins {
 	id 'eclipse'
 	id 'war'
 	id 'jacoco'
+	id 'checkstyle'
 }
 
 group = 'com.wanderingwyatt'
