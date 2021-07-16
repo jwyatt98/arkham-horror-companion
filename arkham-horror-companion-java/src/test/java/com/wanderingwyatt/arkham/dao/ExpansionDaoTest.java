@@ -3,6 +3,13 @@ package com.wanderingwyatt.arkham.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
+import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
+import com.wanderingwyatt.arkham.game.components.Expansion;
+import com.wanderingwyatt.arkham.game.components.Investigator;
+import com.wanderingwyatt.arkham.game.components.SkillTrack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -12,15 +19,10 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
-import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
-import com.wanderingwyatt.arkham.game.components.Expansion;
-import com.wanderingwyatt.arkham.game.components.Investigator;
-import com.wanderingwyatt.arkham.game.components.SkillTrack;
 
 @TestMethodOrder(OrderAnnotation.class)
 class ExpansionDaoTest {
+	private static final String EXPANSION_CHARACTER_1 = "Expansion Character 1";
 	private static final String TEST_EXPANSION_NAME = "TEST EXPANSION";
 	private static final String SCIENCE_BUILDING = "Science Building";
 	private static final String VELMA_S_DINER = "Velma's Diner";
@@ -41,7 +43,7 @@ class ExpansionDaoTest {
 			.build();
 		
 		Investigator investigator = Investigator.builder()
-				.withName("Expansion Character 1")
+				.withName(EXPANSION_CHARACTER_1)
 				.withTitle("The Author")
 				.withFocus(2)
 				.withHealth(4)
@@ -116,7 +118,7 @@ class ExpansionDaoTest {
 	void testRemoveInvestigator() throws Exception {
 		Expansion baseGame = expansionDao.findByName(TEST_EXPANSION_NAME);
 		
-		Optional<Investigator> gloriaOptional = baseGame.getInvestigators().stream().filter(investigator -> "Expansion Character 1".equals(investigator.getName())).findFirst();
+		Optional<Investigator> gloriaOptional = baseGame.getInvestigators().stream().filter(investigator -> EXPANSION_CHARACTER_1.equals(investigator.getName())).findFirst();
 		
 		if(gloriaOptional.isPresent()) {
 			Investigator investigator = gloriaOptional.get();

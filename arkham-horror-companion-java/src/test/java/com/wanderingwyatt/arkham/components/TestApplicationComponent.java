@@ -1,8 +1,8 @@
 package com.wanderingwyatt.arkham.components;
 
-import javax.inject.Singleton;
 import com.wanderingwyatt.arkham.modules.TestDatabaseModule;
 import dagger.Component;
+import javax.inject.Singleton;
 
 @Component(modules = TestDatabaseModule.class)
 @Singleton

@@ -4,6 +4,10 @@ import static com.wanderingwyatt.arkham.server.ArkhamHorrorCompanionServletConte
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
+import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -16,9 +20,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
-import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
