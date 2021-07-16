@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+  "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+  "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <module name="TreeWalker">
+        <module name="SuppressionCommentFilter"/>
+        <module name="LeftCurly"/>
+        <module name="EmptyCatchBlock"/>
+        <module name="CustomImportOrder">
+            <property name="customImportOrderRules" value="STATIC"/>
+            <property name="sortImportsInGroupAlphabetically" value="true"/>
+        </module>
+        <module name="AvoidNoArgumentSuperConstructorCall"/>
+        <module name="AvoidStarImport"/>
+        <module name="EmptyBlock">
+            <property name="option" value="text"/>
+        </module>
+        <module name="EqualsHashCode"/>
+        <module name="MissingOverride"/>
+        <module name="MultipleStringLiterals">
+            <property name="ignoreStringsRegexp" value='(^.{0,3}$)|(^"true"$)|(^"false"$)'/>
+        </module>
+
+        <module name="NoFinalizer"/>
+        <module name="OneTopLevelClass"/>
+        <module name="RedundantImport"/>
+        <module name="RedundantModifier"/>
+        <module name="StringLiteralEquality"/>
+        <module name="UnusedImports"/>
+        <module name="UpperEll"/>
+    </module>
+    <module name="NewlineAtEndOfFile"/>
+</module>

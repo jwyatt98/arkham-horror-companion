@@ -1,13 +1,13 @@
 package com.wanderingwyatt.arkham.server;
 
+import com.wanderingwyatt.arkham.components.ApplicationComponent;
+import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.wanderingwyatt.arkham.components.ApplicationComponent;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
 
 @WebListener
 public class ArkhamHorrorCompanionServletContextInitializer implements ServletContextListener {

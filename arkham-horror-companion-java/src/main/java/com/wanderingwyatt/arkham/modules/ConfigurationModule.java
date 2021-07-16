@@ -1,10 +1,10 @@
 package com.wanderingwyatt.arkham.modules;
 
-import javax.inject.Singleton;
-import org.aeonbits.owner.ConfigFactory;
 import com.wanderingwyatt.arkham.server.ServerConfig;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
+import org.aeonbits.owner.ConfigFactory;
 
 @Module
 public class ConfigurationModule {

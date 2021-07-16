@@ -1,5 +1,7 @@
 package com.wanderingwyatt.arkham.game.components;
 
+import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
+import com.wanderingwyatt.arkham.dao.converter.SkillTrackConverter;
 import java.util.Objects;
 import javax.annotation.Generated;
 import javax.persistence.Cacheable;
@@ -8,8 +10,6 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
-import com.wanderingwyatt.arkham.dao.converter.SkillTrackConverter;
 
 @Entity
 @Cacheable
