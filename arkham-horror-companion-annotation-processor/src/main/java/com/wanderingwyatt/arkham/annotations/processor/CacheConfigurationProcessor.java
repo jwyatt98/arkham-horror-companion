@@ -1,5 +1,7 @@
 package com.wanderingwyatt.arkham.annotations.processor;
 
+import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
+import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration.ExpiryPolicy;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashSet;
@@ -20,13 +22,13 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
-import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration.ExpiryPolicy;
 
 @SupportedAnnotationTypes("com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration")
 @SupportedSourceVersion(SourceVersion.RELEASE_14)
 @SupportedOptions(value = {"arkham.cache.packageName"})
 public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProcessor {
+	private static final String CACHE_CONFIGURER = ".CacheConfigurer";
+
 	public CacheConfigurationProcessor() {
 		// default constructor
 	}
@@ -35,7 +37,7 @@ public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProce
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		String key = "arkham.cache.packageName";
 		String packageLocation = processingEnv.getOptions().get(key);
-		if(!cacheConfigurerFileExists(packageLocation + ".CacheConfigurer")) {
+		if(!cacheConfigurerFileExists(packageLocation + CACHE_CONFIGURER)) {
 			VelocityEngine ve = new VelocityEngine();
 			ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
 			ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
@@ -66,7 +68,7 @@ public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProce
 			}
 			
 			try {
-				JavaFileObject cacheConfigurerJavaFile = processingEnv.getFiler().createSourceFile(packageLocation + ".CacheConfigurer");
+				JavaFileObject cacheConfigurerJavaFile = processingEnv.getFiler().createSourceFile(packageLocation + CACHE_CONFIGURER);
 				Writer writer = cacheConfigurerJavaFile.openWriter();
 				cacheTemplate.merge(cacheContext, writer);
 				writer.flush();
