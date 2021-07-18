@@ -1,6 +1,7 @@
 package com.wanderingwyatt.arkham.annotations.cache;
 
 import static java.lang.annotation.RetentionPolicy.CLASS;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -15,7 +16,7 @@ public @interface CacheConfiguration {
 	TimeUnit timeUnit() default TimeUnit.MINUTES;
 	long length() default 0L;
 	
-	public enum ExpiryPolicy {
+	enum ExpiryPolicy {
 		ETERNAL,
 		ACCESSED,
 	}
