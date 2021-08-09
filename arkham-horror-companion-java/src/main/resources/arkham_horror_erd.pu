@@ -1,0 +1,136 @@
+@startuml Arkham Horror
+skinparam linetype ortho
+Entity "Expansion" as exp {
+    * **exp_id : generated**
+    --
+    * **name : text**
+}
+Entity "Game Board" as game_board {
+    * **gb_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+}
+Entity "Ancient One" as anc {
+    * **anc_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+    * **doom_track : integer**
+    **combat_modifier : integer | rule**
+    **slumber : rule**
+    **worshippers : rule**
+    **attack : rule**
+    **resistance : rule**
+}
+Entity "Investigator" as inv {
+    * **inv_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+}
+Entity "Spell" as spell {
+    * **spell_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+}
+Entity "Unique Item" as unique_item {
+    * **unique_item_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+}
+Entity "Common Item" as common_item {
+    * **common_item_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+}
+Entity "Location" as location {
+    * **loc_id : generated**
+    --
+    * **gb_id : <FK>**
+    * **name : text**
+    * **unstable : boolean**
+    * **neighborhood : text**
+}
+Entity "Connection" as connection {
+    * **con_id : generated**
+    --
+    * **from_loc_id : <FK>**
+    * **to_loc_id : <FK>**
+    color : enum
+}
+Entity "Skills" as skills {
+    * **skill_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+    * **count : int**
+}
+Entity "Deck" as deck {
+    * **deck_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+}
+Entity "Ally" as ally {
+    * **ally_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+}
+Entity "Card" as card {
+    * **card_id : generated**
+    --
+    **deck_id : <FK>**
+    **exp_id : <FK>**
+    * **count : integer**
+}
+Entity "Location Card" as location_card {
+    * **location_card_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **neighborhood : text**
+}
+Entity "Mythos Card" as mythos_card {
+    * **mythos_card_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **title : text**
+    * **type : enum**
+}
+Entity "Gate Card" as gate_card {
+    * **gate_card_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **color : enum**
+}
+Entity "Marker" as marker {
+    * **marker_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+    * **count : integer**
+    * **type : text**
+    rules : rule
+}
+exp ||..o| game_board
+exp ||..o{ anc
+exp ||..o{ inv
+exp ||..o{ spell
+exp ||..o{ unique_item
+exp ||..o{ common_item
+exp ||..o{ skills
+exp ||..o{ ally
+exp ||..o{ deck
+exp |o..o{ card
+exp ||..o{ location_card
+exp ||..o{ mythos_card
+exp ||..o{ gate_card
+exp ||..o{ marker
+deck |o..|{ card
+game_board ||..|{ location
+location }|..|{ connection
+@enduml
