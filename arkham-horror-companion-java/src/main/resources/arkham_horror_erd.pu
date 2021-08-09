@@ -126,9 +126,27 @@ Entity "Marker" as marker {
     * **type : text**
     rules : rule
 }
+Entity "Monster" as monster {
+    * **monster_id : generated**
+    --
+    * **exp_id : <FK>**
+    * **name : text**
+    * **awareness : integer**
+    * **movement_type : rule**
+    * **home_dimension : enum**
+    * **abilities : rule**
+    * **horror_rating : rule**
+    * **horror_damage : rule**
+    * **toughness : rule**
+    * **combat_rating  :rule**
+    * **combat_damage : rule**
+    * **count : integer**
+    flavor_text : text
+}
 exp ||..o| game_board
 exp ||..o{ anc
 exp ||..o{ inv
+exp }|..|{ monster
 exp ||..o{ spell
 exp ||..o{ unique_item
 exp ||..o{ common_item
