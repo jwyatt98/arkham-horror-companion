@@ -17,17 +17,27 @@ Entity "Ancient One" as anc {
     * **exp_id : <FK>**
     * **name : text**
     * **doom_track : integer**
-    **combat_modifier : integer | rule**
-    **slumber : rule**
-    **worshippers : rule**
-    **attack : rule**
-    **resistance : rule**
+    * **combat_modifier : integer | rule**
+    * **slumber : rule**
+    * **worshippers : rule**
+    * **attack : rule**
+    * **resistance : rule**
 }
 Entity "Investigator" as inv {
     * **inv_id : generated**
     --
     * **exp_id : <FK>**
     * **name : text**
+    * **occupation : text**
+    * **max_health : integer**
+    * **max_sanity : integer**
+    * **home : rule**
+    * **fixed_possessions : rule**
+    * **random_possesssions : rule**
+    * **unique_ability : rule**
+    * **unique_ability_title : text**
+    * **focus : integer**
+    * **skill_pairs : skill_pairs**
 }
 Entity "Spell" as spell {
     * **spell_id : generated**
