@@ -44,18 +44,22 @@ Entity "Spell" as spell {
     --
     * **exp_id : <FK>**
     * **name : text**
+    * **cost : rule**
+    * **rule_text : rule**
 }
 Entity "Unique Item" as unique_item {
     * **unique_item_id : generated**
     --
     * **exp_id : <FK>**
     * **name : text**
+    * **rule_text : rule**
 }
 Entity "Common Item" as common_item {
     * **common_item_id : generated**
     --
     * **exp_id : <FK>**
     * **name : text**
+    * **rule_text : rule**
 }
 Entity "Location" as location {
     * **loc_id : generated**
@@ -70,7 +74,7 @@ Entity "Connection" as connection {
     --
     * **from_loc_id : <FK>**
     * **to_loc_id : <FK>**
-    color : enum
+    colors : text[]
 }
 Entity "Skills" as skills {
     * **skill_id : generated**
@@ -78,6 +82,7 @@ Entity "Skills" as skills {
     * **exp_id : <FK>**
     * **name : text**
     * **count : int**
+    * **rule_text : rule**
 }
 Entity "Deck" as deck {
     * **deck_id : generated**
@@ -90,6 +95,7 @@ Entity "Ally" as ally {
     --
     * **exp_id : <FK>**
     * **name : text**
+    * **rule_text : text**
 }
 Entity "Card" as card {
     * **card_id : generated**
@@ -97,12 +103,14 @@ Entity "Card" as card {
     **deck_id : <FK>**
     **exp_id : <FK>**
     * **count : integer**
+    * **rule_text : rule**
 }
 Entity "Location Card" as location_card {
     * **location_card_id : generated**
     --
     * **exp_id : <FK>**
     * **neighborhood : text**
+    * **rule_text : rule**
 }
 Entity "Mythos Card" as mythos_card {
     * **mythos_card_id : generated**
@@ -110,12 +118,14 @@ Entity "Mythos Card" as mythos_card {
     * **exp_id : <FK>**
     * **title : text**
     * **type : enum**
+    * **rule_text : rule**
 }
 Entity "Gate Card" as gate_card {
     * **gate_card_id : generated**
     --
     * **exp_id : <FK>**
     * **color : enum**
+    * **rule_text : rule**
 }
 Entity "Marker" as marker {
     * **marker_id : generated**
