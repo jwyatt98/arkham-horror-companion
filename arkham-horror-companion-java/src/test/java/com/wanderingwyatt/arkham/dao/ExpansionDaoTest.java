@@ -13,8 +13,6 @@ import com.wanderingwyatt.arkham.game.components.SkillTrack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Function;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -67,57 +65,32 @@ class ExpansionDaoTest {
 		investigator.setExpansion(expansion);
 	}
 	
-	protected <R> R performInTransaction(Function<EntityManager, R> work) throws ArkhamHorrorDaoException {
-		EntityManager entityManager = expansionDao.getEntityManager();
-		try {
-			entityManager.getTransaction().begin();
-			var result = work.apply(entityManager);
-			entityManager.getTransaction().commit();
-			return result;
-		} catch (Exception e) {
-			entityManager.getTransaction().rollback();
-			throw new ArkhamHorrorDaoException("Error while trying to interact with the database", e);
-		} finally {
-			if (entityManager.isOpen()) entityManager.close();
-		}
-	}
-
 	public Expansion findByName(String expansionName) throws ArkhamHorrorDaoException {
-		return performInTransaction(entityManager -> {
-			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		try (DaoContext context = expansionDao.createDaoContext()) {
+			context.startTransaction();
+			CriteriaBuilder criteriaBuilder = context.createCriteriaBuilder();
 			CriteriaQuery<Expansion> expansionQuery = criteriaBuilder.createQuery(Expansion.class);
 			Root<Expansion> rootExpansion = expansionQuery.from(Expansion.class);
 			rootExpansion.fetch(Expansion.INVESTIGATORS_FIELD, JoinType.INNER);
 			expansionQuery.select(rootExpansion);
 			expansionQuery.where(criteriaBuilder.equal(rootExpansion.get(Expansion.NAME_FIELD), expansionName));
-			Query nameQuery = entityManager.createQuery(expansionQuery);
+			Query nameQuery = context.createQuery(expansionQuery);
 			return (Expansion)nameQuery.getSingleResult();
-		});
+		}
 	}
 	
 	@AfterAll
 	static void tearDown() throws Exception {
-		EntityManager entityManager = expansionDao.getEntityManager();
-		entityManager.getTransaction().begin();
-		try {
-			Optional<Expansion> foundExpansion = expansionDao.findByEntityGraph(Expansion.class, expansion.getId(), Expansion::addAttributeNodes, entityManager);
-			if(foundExpansion.isPresent()) {
-				expansionDao.remove(foundExpansion.get(), entityManager);				
-			}
-		} catch (Exception e) {
-			entityManager.getTransaction().rollback();
-		} finally {
-			entityManager.close();
+		Optional<Expansion> foundExpansion = expansionDao.findByEntityGraph(Expansion.class, expansion.getId(), Expansion::addAttributeNodes);
+		if(foundExpansion.isPresent()) {
+			expansionDao.remove(foundExpansion.get());				
 		}
 	}
 	
 	@Test
 	@Order(1)
 	void testPersist() throws Exception {
-		performInTransaction((entityManager) -> {
-			expansionDao.persist(expansion, entityManager);
-			return expansion;
-		});
+		expansionDao.persist(expansion);
 		assertEquals(1, expansion.getInvestigators().size());
 		Investigator investigator = expansion.getInvestigators().get(0);
 		assertNotNull(investigator.getId());
@@ -155,9 +128,7 @@ class ExpansionDaoTest {
 			.withExpansion(baseGame).build();
 		
 		baseGame.addInvestigator(kateInvestigator);
-		expansion = performInTransaction(entityManager -> {
-			return expansionDao.merge(baseGame, entityManager);			
-		});
+		expansion = expansionDao.merge(baseGame);			
 		
 		Expansion baseGameSecondTime = findByName(TEST_EXPANSION_NAME);
 		assertEquals(2, baseGameSecondTime.getInvestigators().size());
@@ -174,9 +145,7 @@ class ExpansionDaoTest {
 			Investigator investigator = gloriaOptional.get();
 			baseGame.removeInvestigator(investigator);
 			assertEquals(1, baseGame.getInvestigators().size());
-			expansion = performInTransaction(entityManager -> {
-				return expansionDao.merge(baseGame, entityManager);			
-			});
+			expansion = expansionDao.merge(baseGame);			
 			Expansion baseGameUpdated = findByName(TEST_EXPANSION_NAME);
 			assertEquals(1, baseGameUpdated.getInvestigators().size());
 		} else {
