@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -65,48 +63,24 @@ class InvestigatorDaoTest {
 		
 		expansion.addInvestigator(investigator);
 	}
-	
-	static protected <R> R performInTransaction(Function<EntityManager, R> work) throws ArkhamHorrorDaoException {
-		EntityManager entityManager = investigatorDao.getEntityManager();
-		try {
-			entityManager.getTransaction().begin();
-			var result = work.apply(entityManager);
-			entityManager.getTransaction().commit();
-			return result;
-		} catch (Exception e) {
-			entityManager.getTransaction().rollback();
-			throw new ArkhamHorrorDaoException("Error while trying to interact with the database", e);
-		} finally {
-			if (entityManager.isOpen()) entityManager.close();
-		}
-	}
-	
+
 	@AfterAll
 	static void tearDown() throws Exception {
-		performInTransaction(entityManager -> {
-			investigatorDao.remove(expansion, entityManager);
-			return java.lang.Void.class;
-		});
+		investigatorDao.remove(expansion);
 	}
 
 	@Test
 	@Order(1)
 	void testPersist() throws Exception {
-		performInTransaction(entityManager -> {
-			investigatorDao.persist(expansion, entityManager);
-			return java.lang.Void.class;
-		});
+		investigatorDao.persist(expansion);
 		assertNotNull(investigator.getId());
 	}
 
 	@Test
 	@Order(2)
 	void testFind() throws Exception {
-		Investigator investigatorFound = 
-				performInTransaction(entityManager -> {
-					Optional<Investigator> didWeFindIt = investigatorDao.find(Investigator.class, investigator.getId(), entityManager);
-					return didWeFindIt.get();
-				});
+		Optional<Investigator> didWeFindIt = investigatorDao.find(Investigator.class, investigator.getId());
+		Investigator investigatorFound = didWeFindIt.get();
 		assertEquals(investigator, investigatorFound);
 		assertEquals(investigator.hashCode(), investigatorFound.hashCode());
 		assertNotSame(investigator, investigatorFound);
@@ -115,11 +89,8 @@ class InvestigatorDaoTest {
 	@Test
 	@Order(3)
 	void testFindByEntityGraph() throws Exception {
-		Investigator investigatorFound = 
-		performInTransaction(entityManager -> {
-			Optional<Investigator> findByEntityGraph = investigatorDao.findByEntityGraph(Investigator.class, investigator.getId(), Investigator::addAttributeNodes, entityManager);
-			return findByEntityGraph.get();
-		});
+		Optional<Investigator> findByEntityGraph = investigatorDao.findByEntityGraph(Investigator.class, investigator.getId(), Investigator::addAttributeNodes);
+		Investigator investigatorFound = findByEntityGraph.get();
 		assertEquals(investigator, investigatorFound);
 		assertEquals(investigator.hashCode(), investigatorFound.hashCode());
 		assertNotSame(investigator, investigatorFound);
@@ -129,9 +100,7 @@ class InvestigatorDaoTest {
 	@Order(4)
 	void testMerge() throws Exception {
 		investigator.setHealth(10);
-		Investigator mergedInvestigator = performInTransaction(entityManager -> {
-			return investigatorDao.merge(investigator, entityManager);
-		});
+		Investigator mergedInvestigator = investigatorDao.merge(investigator);
 		
 		assertEquals(investigator, mergedInvestigator);
 		assertNotSame(investigator, mergedInvestigator);
@@ -141,21 +110,15 @@ class InvestigatorDaoTest {
 	@Test
 	@Order(5)
 	void testNotFound() throws Exception {
-		Investigator exceptionOrNull = performInTransaction(entityManager -> {
-			Optional<Investigator> investigator = investigatorDao.find(Investigator.class, UUID.randomUUID(), entityManager);
-			assertFalse(investigator.isPresent());
-			return null;
-		});
+		Optional<Investigator> investigator = investigatorDao.find(Investigator.class, UUID.randomUUID());
+		assertFalse(investigator.isPresent());
 	}
 	
 	@Test
 	@Order(6)
 	void testPersistException() throws Exception {
 		assertThrows(ArkhamHorrorDaoException.class, () -> {
-			performInTransaction(entityManager -> {
-				investigatorDao.persist(investigator, entityManager);
-				return java.lang.Void.class;
-			});
+			investigatorDao.persist(investigator);
 		});
 	}
 	
