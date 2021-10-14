@@ -2,74 +2,57 @@ package com.wanderingwyatt.arkham.dao;
 
 import com.wanderingwyatt.arkham.game.components.Identifiable;
 import dagger.Lazy;
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.UUID;
+import javax.inject.Inject;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-public abstract class AbstractArkhamHorrorDao<T extends Identifiable<K>, K> {
-	private Class<T> reference;
+public class AbstractArkhamHorrorDao {
 	private Lazy<EntityManagerFactory> entityManagerFactory;
 	
-	@SuppressWarnings("unchecked")
+	@Inject
 	protected AbstractArkhamHorrorDao(Lazy<EntityManagerFactory> entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
-		this.reference = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0];
 	}
 	
-	public void persist(T t) throws ArkhamHorrorDaoException {
-		performInTransaction(entityManager -> {
-			entityManager.persist(t);
-			return t;
-		});
+	public EntityManager getEntityManager() {
+		return this.entityManagerFactory.get().createEntityManager();
 	}
 	
-	public T merge(T t) throws ArkhamHorrorDaoException {
-		return performInTransaction(entityManager -> entityManager.merge(t));
+	public <T extends Identifiable> void persist(T t, EntityManager em) {
+		em.persist(t);
 	}
 	
-	public T find(K id) throws ArkhamHorrorDaoException {
-		return performInTransaction(entityManager -> entityManager.find(reference, id));
+	public <T extends Identifiable> T merge(T t, EntityManager em) {
+		return em.merge(t);
 	}
 	
-	public Class<Void> remove(T t) throws ArkhamHorrorDaoException {
-		return performInTransaction(entityManager -> {
-			Optional<T> foundEntity = Optional.ofNullable(entityManager.find(reference, t.getId()));
-			if(foundEntity.isPresent()) {
-				entityManager.remove(foundEntity.get());
-			}
-			return Void.TYPE;
-		});
+	public <T extends Identifiable> Optional<T> find(Class<T> clazz, UUID id, EntityManager em) {
+		return Optional.ofNullable(em.find(clazz, id));
 	}
 	
-	public T findByEntityGraph(K id) {
-		EntityManager entityManager = entityManagerFactory.get().createEntityManager();
-		EntityGraph<T> entityGraph = entityManager.createEntityGraph(this.reference);
-		addAttributeNodes(entityGraph);
-		Map<String, Object> properties = new HashMap<>();
-		properties.put("javax.persistence.fetchgraph", entityGraph);
-		return entityManager.find(this.reference, id, properties);
-	}
-	
-	protected <R> R performInTransaction(Function<EntityManager, R> work) throws ArkhamHorrorDaoException {
-		EntityManager entityManager = entityManagerFactory.get().createEntityManager();
-		try {
-			entityManager.getTransaction().begin();
-			var result = work.apply(entityManager);
-			entityManager.getTransaction().commit();
-			return result;
-		} catch (Exception e) {
-			entityManager.getTransaction().rollback();
-			throw new ArkhamHorrorDaoException("Error while trying to interact with the database", e);
-		} finally {
-			if (entityManager.isOpen()) entityManager.close();
+	public <T extends Identifiable> void remove(T t, EntityManager em) {
+		Optional<? extends Identifiable> found = Optional.ofNullable(em.find(t.getClass(), t.getId()));
+		if(found.isPresent()) {
+			em.remove(found.get());
 		}
 	}
 	
-	protected abstract void addAttributeNodes(EntityGraph<T> entityGraph);
+	public <T extends Identifiable> Optional<T> findByEntityGraph(Class<T> type, UUID id, EntityGraphProvider egp,  EntityManager em) {
+		EntityManager entityManager = entityManagerFactory.get().createEntityManager();
+		EntityGraph<T> entityGraph = entityManager.createEntityGraph(type);
+		egp.addAttributeNodes(entityGraph);
+		Map<String, Object> properties = new HashMap<>();
+		properties.put("javax.persistence.fetchgraph", entityGraph);
+		return Optional.ofNullable(entityManager.find(type, id, properties));
+	}
+	
+	@FunctionalInterface
+	public static interface EntityGraphProvider {
+		void addAttributeNodes(EntityGraph<?> entityGraph);
+	}
 }

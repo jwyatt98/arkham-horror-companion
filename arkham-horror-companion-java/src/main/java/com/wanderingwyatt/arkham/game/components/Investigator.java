@@ -8,6 +8,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EntityGraph;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -190,5 +191,9 @@ public class Investigator extends GameComponent {
 		public Investigator build() {
 			return new Investigator(this);
 		}
+	}
+	
+	public static void addAttributeNodes(EntityGraph<?> entityGraph) {
+		entityGraph.addAttributeNodes("name", "title", "health", "sanity", "focus", "home", "skillTrack", "expansion");
 	}
 }

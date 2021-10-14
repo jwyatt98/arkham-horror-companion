@@ -13,6 +13,13 @@ import com.wanderingwyatt.arkham.game.components.SkillTrack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Function;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -26,13 +33,13 @@ class ExpansionDaoTest {
 	private static final String TEST_EXPANSION_NAME = "TEST EXPANSION";
 	private static final String SCIENCE_BUILDING = "Science Building";
 	private static final String VELMA_S_DINER = "Velma's Diner";
-	static ExpansionDao expansionDao;
+	static AbstractArkhamHorrorDao expansionDao;
 	private static Expansion expansion;
 	
 	@BeforeAll
 	static void setUp() throws Exception {
 		ArkhamHorrorApplicationComponentTestBridge.setInstance(DaggerTestApplicationComponent.create());
-		expansionDao = ArkhamHorrorApplicationComponent.getInstance().expansionDao();
+		expansionDao = ArkhamHorrorApplicationComponent.getInstance().arkhamDao();
 		SkillTrack skillTrack = SkillTrack.builder()
 			.withSpeed(new ArrayList<Integer>(Arrays.asList(1,2,3,4)))
 			.withSneak(new ArrayList<Integer>(Arrays.asList(3,2,1,0)))
@@ -59,17 +66,58 @@ class ExpansionDaoTest {
 		
 		investigator.setExpansion(expansion);
 	}
+	
+	protected <R> R performInTransaction(Function<EntityManager, R> work) throws ArkhamHorrorDaoException {
+		EntityManager entityManager = expansionDao.getEntityManager();
+		try {
+			entityManager.getTransaction().begin();
+			var result = work.apply(entityManager);
+			entityManager.getTransaction().commit();
+			return result;
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			throw new ArkhamHorrorDaoException("Error while trying to interact with the database", e);
+		} finally {
+			if (entityManager.isOpen()) entityManager.close();
+		}
+	}
 
+	public Expansion findByName(String expansionName) throws ArkhamHorrorDaoException {
+		return performInTransaction(entityManager -> {
+			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<Expansion> expansionQuery = criteriaBuilder.createQuery(Expansion.class);
+			Root<Expansion> rootExpansion = expansionQuery.from(Expansion.class);
+			rootExpansion.fetch(Expansion.INVESTIGATORS_FIELD, JoinType.INNER);
+			expansionQuery.select(rootExpansion);
+			expansionQuery.where(criteriaBuilder.equal(rootExpansion.get(Expansion.NAME_FIELD), expansionName));
+			Query nameQuery = entityManager.createQuery(expansionQuery);
+			return (Expansion)nameQuery.getSingleResult();
+		});
+	}
+	
 	@AfterAll
 	static void tearDown() throws Exception {
-		Expansion foundExpansion = expansionDao.findByEntityGraph(expansion.getId());
-		expansionDao.remove(foundExpansion);
+		EntityManager entityManager = expansionDao.getEntityManager();
+		entityManager.getTransaction().begin();
+		try {
+			Optional<Expansion> foundExpansion = expansionDao.findByEntityGraph(Expansion.class, expansion.getId(), Expansion::addAttributeNodes, entityManager);
+			if(foundExpansion.isPresent()) {
+				expansionDao.remove(foundExpansion.get(), entityManager);				
+			}
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+		} finally {
+			entityManager.close();
+		}
 	}
 	
 	@Test
 	@Order(1)
 	void testPersist() throws Exception {
-		expansionDao.persist(expansion);
+		performInTransaction((entityManager) -> {
+			expansionDao.persist(expansion, entityManager);
+			return expansion;
+		});
 		assertEquals(1, expansion.getInvestigators().size());
 		Investigator investigator = expansion.getInvestigators().get(0);
 		assertNotNull(investigator.getId());
@@ -78,7 +126,7 @@ class ExpansionDaoTest {
 	@Test
 	@Order(2)
 	void testFindByName() throws Exception {
-		Expansion baseGame = expansionDao.findByName(TEST_EXPANSION_NAME);
+		Expansion baseGame = findByName(TEST_EXPANSION_NAME);
 		assertEquals(1, baseGame.getInvestigators().size());
 		assertEquals(TEST_EXPANSION_NAME, baseGame.getName());
 	}
@@ -86,7 +134,7 @@ class ExpansionDaoTest {
 	@Test
 	@Order(3)
 	void testExpansionUpdate() throws Exception {
-		Expansion baseGame = expansionDao.findByName(TEST_EXPANSION_NAME);
+		Expansion baseGame = findByName(TEST_EXPANSION_NAME);
 		
 		SkillTrack kateSkillTrack = SkillTrack.builder()
 			.withFight(Arrays.asList(1,2,3,4))
@@ -107,16 +155,18 @@ class ExpansionDaoTest {
 			.withExpansion(baseGame).build();
 		
 		baseGame.addInvestigator(kateInvestigator);
-		expansion = expansionDao.merge(baseGame);
+		expansion = performInTransaction(entityManager -> {
+			return expansionDao.merge(baseGame, entityManager);			
+		});
 		
-		Expansion baseGameSecondTime = expansionDao.findByName(TEST_EXPANSION_NAME);
+		Expansion baseGameSecondTime = findByName(TEST_EXPANSION_NAME);
 		assertEquals(2, baseGameSecondTime.getInvestigators().size());
 	}
 	
 	@Test
 	@Order(4)
 	void testRemoveInvestigator() throws Exception {
-		Expansion baseGame = expansionDao.findByName(TEST_EXPANSION_NAME);
+		Expansion baseGame = findByName(TEST_EXPANSION_NAME);
 		
 		Optional<Investigator> gloriaOptional = baseGame.getInvestigators().stream().filter(investigator -> EXPANSION_CHARACTER_1.equals(investigator.getName())).findFirst();
 		
@@ -124,8 +174,10 @@ class ExpansionDaoTest {
 			Investigator investigator = gloriaOptional.get();
 			baseGame.removeInvestigator(investigator);
 			assertEquals(1, baseGame.getInvestigators().size());
-			expansion = expansionDao.merge(baseGame);
-			Expansion baseGameUpdated = expansionDao.findByName(TEST_EXPANSION_NAME);
+			expansion = performInTransaction(entityManager -> {
+				return expansionDao.merge(baseGame, entityManager);			
+			});
+			Expansion baseGameUpdated = findByName(TEST_EXPANSION_NAME);
 			assertEquals(1, baseGameUpdated.getInvestigators().size());
 		} else {
 			fail("Could not find Expansion Character 1 in the Base Expansion");

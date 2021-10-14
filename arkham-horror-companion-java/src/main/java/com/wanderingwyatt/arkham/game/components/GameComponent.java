@@ -1,9 +1,9 @@
 package com.wanderingwyatt.arkham.game.components;
 
 import java.util.Objects;
+import java.util.UUID;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,10 +11,10 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public class GameComponent implements Identifiable<Integer>{
+public abstract class GameComponent implements Identifiable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
+	@GeneratedValue
+	protected UUID id;
 	
 	@Version
 	private Integer version;
@@ -23,12 +23,12 @@ public class GameComponent implements Identifiable<Integer>{
 	@JoinColumn(name="expansion_id", referencedColumnName = "id", nullable = false)
 	protected Expansion expansion;
 
-	public void setId(Integer id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 	
 	@Override
-	public Integer getId() {
+	public UUID getId() {
 		return id;
 	}
 	
