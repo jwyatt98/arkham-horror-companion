@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class InvestigatorTest {
@@ -13,12 +14,13 @@ class InvestigatorTest {
 	@Test
 	void investigatorTestNonBuilder() {
 		Investigator investigator = new Investigator();
-		investigator.setId(1);
+		UUID randomUUID = UUID.randomUUID();
+		investigator.setId(randomUUID);
 		investigator.setName(TEST_NAME);
 		investigator.setHealth(10);
 		investigator.setSanity(5);
 		
-		assertEquals(1, investigator.getId());
+		assertEquals(randomUUID, investigator.getId());
 		assertEquals(TEST_NAME, investigator.getName());
 		assertEquals(10, investigator.getHealth());
 		assertEquals(5, investigator.getSanity());

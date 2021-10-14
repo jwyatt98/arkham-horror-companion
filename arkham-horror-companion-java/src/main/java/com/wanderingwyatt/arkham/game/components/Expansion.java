@@ -4,13 +4,14 @@ import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import javax.annotation.Generated;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityGraph;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import org.hibernate.annotations.Cache;
@@ -20,11 +21,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "expansion-cache")
 @CacheConfiguration(cacheName = "expansion-cache", key = Integer.class)
-public class Expansion implements Identifiable<Integer> {
-
+public class Expansion implements Identifiable {
+	public static final String INVESTIGATORS_FIELD = "investigators";
+	public static final String NAME_FIELD = "name";
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
+	@GeneratedValue
+	protected UUID id;
 	
 	@Column(unique = true)
 	private String name;
@@ -46,7 +49,7 @@ public class Expansion implements Identifiable<Integer> {
 		investigators.remove(investigator);
 	}
 	
-	public Integer getId() {
+	public UUID getId() {
 		return id;
 	}
 
@@ -112,5 +115,9 @@ public class Expansion implements Identifiable<Integer> {
 		public Expansion build() {
 			return new Expansion(this);
 		}
+	}
+	
+	public static void addAttributeNodes(EntityGraph<?> entityGraph) {
+		entityGraph.addAttributeNodes(NAME_FIELD, INVESTIGATORS_FIELD);
 	}
 }
