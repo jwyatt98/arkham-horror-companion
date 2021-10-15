@@ -67,7 +67,6 @@ class ExpansionDaoTest {
 	
 	public Expansion findByName(String expansionName) throws ArkhamHorrorDaoException {
 		try (DaoContext context = expansionDao.createDaoContext()) {
-			context.startTransaction();
 			CriteriaBuilder criteriaBuilder = context.createCriteriaBuilder();
 			CriteriaQuery<Expansion> expansionQuery = criteriaBuilder.createQuery(Expansion.class);
 			Root<Expansion> rootExpansion = expansionQuery.from(Expansion.class);
