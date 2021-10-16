@@ -13,7 +13,7 @@ public class TestDatabaseImplModule {
 	SessionFactory createTestEntityManagerFactor(@Named("testConfiguration") Configuration configuration) {
 		return configuration.buildSessionFactory();
 	}
-	
+
 	@Provides
 	@Named("testConfiguration")
 	Configuration provideTestConfiguration(@Named("annotatedPersistenceClasses") Set<Class<?>> annotatedPersistenceClasses) {
