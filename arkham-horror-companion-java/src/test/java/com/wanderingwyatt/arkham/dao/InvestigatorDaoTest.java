@@ -29,7 +29,7 @@ class InvestigatorDaoTest {
 	private static final String THE_AUTHOR = "The Author";
 	private static final String SCIENCE_BUILDING = "Science Building";
 	private static final String VELMA_S_DINER = "Velma's Diner";
-	static AbstractArkhamHorrorDao investigatorDao;
+	static PersistenceDaoManager investigatorDao;
 	static Investigator investigator;
 	private static Expansion expansion;
 	

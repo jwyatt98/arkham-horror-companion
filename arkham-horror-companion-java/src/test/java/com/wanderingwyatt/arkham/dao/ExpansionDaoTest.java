@@ -31,7 +31,7 @@ class ExpansionDaoTest {
 	private static final String TEST_EXPANSION_NAME = "TEST EXPANSION";
 	private static final String SCIENCE_BUILDING = "Science Building";
 	private static final String VELMA_S_DINER = "Velma's Diner";
-	static AbstractArkhamHorrorDao expansionDao;
+	static PersistenceDaoManager expansionDao;
 	private static Expansion expansion;
 	
 	@BeforeAll
