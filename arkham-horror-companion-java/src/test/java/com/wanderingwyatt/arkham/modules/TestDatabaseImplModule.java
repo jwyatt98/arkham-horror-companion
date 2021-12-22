@@ -22,8 +22,8 @@ public class TestDatabaseImplModule {
 		configuration.setProperty("hibernate.connection.url", "jdbc:h2:mem:db1");                                
 		configuration.setProperty("hibernate.connection.username", "sa");     
 		configuration.setProperty("hibernate.connection.password", "");
-		configuration.setProperty("dialect", "org.hibernate.dialect.H2");
-		configuration.setProperty("hibernate.hbm2ddl.auto", "update");
+		configuration.setProperty("dialect", "org.hibernate.dialect.H2Dialect");
+		configuration.setProperty("hibernate.hbm2ddl.auto", "create");
 		configuration.setProperty("hibernate.current_session_context_class", "thread");
 		configuration.setProperty("show_sql", "true");
 		configuration.setProperty("hibernate.connection.pool_size", "10");
