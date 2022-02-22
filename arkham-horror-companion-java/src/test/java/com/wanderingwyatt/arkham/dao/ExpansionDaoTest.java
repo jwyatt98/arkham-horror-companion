@@ -31,13 +31,13 @@ class ExpansionDaoTest {
 	private static final String TEST_EXPANSION_NAME = "TEST EXPANSION";
 	private static final String SCIENCE_BUILDING = "Science Building";
 	private static final String VELMA_S_DINER = "Velma's Diner";
-	static PersistenceDaoManager expansionDao;
+	static PersistenceDaoManager arkhamDao;
 	private static Expansion expansion;
 	
 	@BeforeAll
 	static void setUp() throws Exception {
 		ArkhamHorrorApplicationComponentTestBridge.setInstance(DaggerTestApplicationComponent.create());
-		expansionDao = ArkhamHorrorApplicationComponent.getInstance().arkhamDao();
+		arkhamDao = ArkhamHorrorApplicationComponent.getInstance().arkhamDao();
 		SkillTrack skillTrack = SkillTrack.builder()
 			.withSpeed(new ArrayList<Integer>(Arrays.asList(1,2,3,4)))
 			.withSneak(new ArrayList<Integer>(Arrays.asList(3,2,1,0)))
@@ -66,7 +66,7 @@ class ExpansionDaoTest {
 	}
 	
 	public Expansion findByName(String expansionName) throws ArkhamHorrorDaoException {
-		try (DaoContext context = expansionDao.createDaoContext()) {
+		try (DaoContext context = arkhamDao.createDaoContext()) {
 			CriteriaBuilder criteriaBuilder = context.createCriteriaBuilder();
 			CriteriaQuery<Expansion> expansionQuery = criteriaBuilder.createQuery(Expansion.class);
 			Root<Expansion> rootExpansion = expansionQuery.from(Expansion.class);
@@ -80,16 +80,16 @@ class ExpansionDaoTest {
 	
 	@AfterAll
 	static void tearDown() throws Exception {
-		Optional<Expansion> foundExpansion = expansionDao.findByEntityGraph(Expansion.class, expansion.getId(), Expansion::addAttributeNodes);
+		Optional<Expansion> foundExpansion = arkhamDao.findByEntityGraph(Expansion.class, expansion.getId(), Expansion::addAttributeNodes);
 		if(foundExpansion.isPresent()) {
-			expansionDao.remove(foundExpansion.get());				
+			arkhamDao.remove(foundExpansion.get());				
 		}
 	}
 	
 	@Test
 	@Order(1)
 	void testPersist() throws Exception {
-		expansionDao.persist(expansion);
+		arkhamDao.persist(expansion);
 		assertEquals(1, expansion.getInvestigators().size());
 		Investigator investigator = expansion.getInvestigators().get(0);
 		assertNotNull(investigator.getId());
@@ -127,7 +127,7 @@ class ExpansionDaoTest {
 			.withExpansion(baseGame).build();
 		
 		baseGame.addInvestigator(kateInvestigator);
-		expansion = expansionDao.merge(baseGame);			
+		expansion = arkhamDao.merge(baseGame);			
 		
 		Expansion baseGameSecondTime = findByName(TEST_EXPANSION_NAME);
 		assertEquals(2, baseGameSecondTime.getInvestigators().size());
@@ -144,7 +144,7 @@ class ExpansionDaoTest {
 			Investigator investigator = gloriaOptional.get();
 			baseGame.removeInvestigator(investigator);
 			assertEquals(1, baseGame.getInvestigators().size());
-			expansion = expansionDao.merge(baseGame);			
+			expansion = arkhamDao.merge(baseGame);			
 			Expansion baseGameUpdated = findByName(TEST_EXPANSION_NAME);
 			assertEquals(1, baseGameUpdated.getInvestigators().size());
 		} else {
