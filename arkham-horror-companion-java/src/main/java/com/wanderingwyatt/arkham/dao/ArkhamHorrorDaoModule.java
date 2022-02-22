@@ -1,32 +1,23 @@
-package com.wanderingwyatt.arkham.modules;
+package com.wanderingwyatt.arkham.dao;
 
 import com.wanderingwyatt.arkham.modules.generated.CacheConfigurer;
 import com.wanderingwyatt.arkham.server.ServerConfig;
-import dagger.Module;
-import dagger.Provides;
-import java.util.Set;
-import javax.inject.Named;
-import org.hibernate.SessionFactory;
 import org.hibernate.cache.jcache.ConfigSettings;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 
-@Module
-public class DatabaseImplModule {
-	@Provides
-	SessionFactory createEntityManagerFactor(@Named("configuration") Configuration configuration) {
-		return configuration.buildSessionFactory();
+public class ArkhamHorrorDaoModule extends DaoModule {
+
+	private final ServerConfig serverConfig;
+	private final CacheConfigurer cacheConfigurer;
+
+	public ArkhamHorrorDaoModule(ServerConfig serverConfig, CacheConfigurer cacheConfigurer) {
+		this.serverConfig = serverConfig;
+		this.cacheConfigurer = cacheConfigurer;
 	}
-	
-	@Provides
-	@Named("configuration")
-	Configuration provideConfiguration(@Named("annotatedPersistenceClasses") Set<Class<?>> annotatedPersistenceClasses, 
-			CacheConfigurer cacheConfigurer,
-			ServerConfig serverConfig) {
-		
-		// Configure all the caches before configuring hibernate for caching.
-		cacheConfigurer.configure();
-		
+
+	@Override
+	protected Configuration getConfiguration() {
 		Configuration configuration = new Configuration();
 		configuration.setProperty(AvailableSettings.DATASOURCE, "java:comp/env/jdbc/arkhamHorrorDb");
 		configuration.setProperty(AvailableSettings.DIALECT, serverConfig.databaseDialect());
@@ -36,9 +27,11 @@ public class DatabaseImplModule {
 		configuration.setProperty(AvailableSettings.USE_QUERY_CACHE, "true");
 		configuration.setProperty(AvailableSettings.CACHE_REGION_FACTORY, "org.hibernate.cache.jcache.JCacheRegionFactory");
 		configuration.setProperty(ConfigSettings.PROVIDER, "org.ehcache.jsr107.EhcacheCachingProvider");
-	    
-		// Add all the annotatedPersistenceClasses
-		annotatedPersistenceClasses.forEach(configuration::addAnnotatedClass);
 		return configuration;
-	}	
+	}
+	
+	@Override
+	protected void configureCache() {
+		this.cacheConfigurer.configure();		
+	}
 }

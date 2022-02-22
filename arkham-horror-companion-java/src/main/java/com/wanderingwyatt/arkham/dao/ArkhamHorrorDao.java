@@ -1,23 +1,25 @@
 package com.wanderingwyatt.arkham.dao;
 
 import com.wanderingwyatt.arkham.game.components.Identifiable;
-import dagger.Lazy;
 import java.util.Optional;
 import java.util.UUID;
-import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 
 public class ArkhamHorrorDao implements PersistenceDaoManager {
-	private Lazy<EntityManagerFactory> entityManagerFactory;
+	private final EntityManagerFactory entityManagerFactory;
 	
-	@Inject
-	public ArkhamHorrorDao(Lazy<EntityManagerFactory> entityManagerFactory) {
+	public ArkhamHorrorDao(EntityManagerFactory entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
 	}
 	
 	@Override
+	public EntityManagerFactory getEntityManagerFactory() {
+		return this.entityManagerFactory;
+	}
+	
+	@Override
 	public DaoContext createDaoContext() {
-		return new DaoContext(entityManagerFactory.get().createEntityManager());
+		return new DaoContext(entityManagerFactory.createEntityManager());
 	}
 
 	@Override

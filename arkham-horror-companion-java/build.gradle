@@ -42,10 +42,7 @@ dependencies {
 
 
 
-	// https://mvnrepository.com/artifact/com.google.dagger/dagger-compiler
-	annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '_'
 	annotationProcessor project(':arkham-horror-companion-annotation-processor')
-	testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '_'
 	
 	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '_'
 	

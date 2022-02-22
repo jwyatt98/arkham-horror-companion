@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponentTestBridge;
-import com.wanderingwyatt.arkham.components.DaggerTestApplicationComponent;
 import com.wanderingwyatt.arkham.game.components.Expansion;
 import com.wanderingwyatt.arkham.game.components.Investigator;
 import com.wanderingwyatt.arkham.game.components.SkillTrack;
@@ -36,8 +33,8 @@ class ExpansionDaoTest {
 	
 	@BeforeAll
 	static void setUp() throws Exception {
-		ArkhamHorrorApplicationComponentTestBridge.setInstance(DaggerTestApplicationComponent.create());
-		arkhamDao = ArkhamHorrorApplicationComponent.getInstance().arkhamDao();
+		TestDaoModule testDaoModule = new TestDaoModule();
+		arkhamDao = testDaoModule.createPersistenceDaoManager();
 		SkillTrack skillTrack = SkillTrack.builder()
 			.withSpeed(new ArrayList<Integer>(Arrays.asList(1,2,3,4)))
 			.withSneak(new ArrayList<Integer>(Arrays.asList(3,2,1,0)))
