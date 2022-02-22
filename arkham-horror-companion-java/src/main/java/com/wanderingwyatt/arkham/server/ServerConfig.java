@@ -9,6 +9,8 @@ import org.aeonbits.owner.Config.Sources;
 @Sources({ "system:properties",
            "system:env" })
 public interface ServerConfig extends Config {
+	String CONTEXT_ATTRIBUTE = ServerConfig.class.getSimpleName() + ".contextAttribute";
+	
 	@Key("arkham.server.database.dialect")
 	@DefaultValue("org.hibernate.dialect.H2Dialect")
 	String databaseDialect();

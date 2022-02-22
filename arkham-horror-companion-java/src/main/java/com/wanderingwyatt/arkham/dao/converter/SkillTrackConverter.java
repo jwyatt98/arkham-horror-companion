@@ -15,10 +15,6 @@ public class SkillTrackConverter implements AttributeConverter<SkillTrack, Strin
 	private static final Logger LOGGER = LogManager.getLogger(SkillTrackConverter.class);
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	
-	public SkillTrackConverter() {
-		// no arg constructor
-	}
-	
 	@Override
 	public String convertToDatabaseColumn(SkillTrack attribute) {
 		String skillTrackJson = null;

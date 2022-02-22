@@ -1,11 +1,13 @@
 package com.wanderingwyatt.arkham.server;
 
-import com.wanderingwyatt.arkham.components.ApplicationComponent;
-import com.wanderingwyatt.arkham.components.ArkhamHorrorApplicationComponent;
+import com.wanderingwyatt.arkham.dao.ArkhamHorrorDaoModule;
+import com.wanderingwyatt.arkham.dao.PersistenceDaoManager;
+import com.wanderingwyatt.arkham.modules.generated.CacheConfigurer;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import org.aeonbits.owner.ConfigFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,15 +19,21 @@ public class ArkhamHorrorCompanionServletContextInitializer implements ServletCo
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		LOGGER.info(() -> "Context Initialized.");
-		ApplicationComponent applicationComponent = ArkhamHorrorApplicationComponent.getInstance();
-		sce.getServletContext().setAttribute(APPLICATION_COMPONENT, applicationComponent);
+		
+		// Get configuration
+		ServerConfig serverConfig = ConfigFactory.create(ServerConfig.class);
+		sce.getServletContext().setAttribute(ServerConfig.CONTEXT_ATTRIBUTE, serverConfig);
+		
+		ArkhamHorrorDaoModule arkhamHorrorDaoModule = new ArkhamHorrorDaoModule(serverConfig, new CacheConfigurer());
+		sce.getServletContext().setAttribute(PersistenceDaoManager.CONTEXT_ATTRIBUTE, arkhamHorrorDaoModule.createPersistenceDaoManager());
 	}
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		LOGGER.info(() -> "Context Destroyed.");
-		ApplicationComponent applicationComponent = (ApplicationComponent)sce.getServletContext().getAttribute(APPLICATION_COMPONENT);
-		EntityManagerFactory entityManagerFactory = applicationComponent.entityManagerFactory().get();
+		
+		PersistenceDaoManager daoManager = (PersistenceDaoManager) sce.getServletContext().getAttribute(PersistenceDaoManager.CONTEXT_ATTRIBUTE);
+		EntityManagerFactory entityManagerFactory = daoManager.getEntityManagerFactory();
 		if(entityManagerFactory.isOpen()) {
 			entityManagerFactory.close();
 		}
