@@ -29,14 +29,14 @@ class InvestigatorDaoTest {
 	private static final String THE_AUTHOR = "The Author";
 	private static final String SCIENCE_BUILDING = "Science Building";
 	private static final String VELMA_S_DINER = "Velma's Diner";
-	static PersistenceDaoManager investigatorDao;
+	static PersistenceDaoManager arkhamDao;
 	static Investigator investigator;
 	private static Expansion expansion;
 	
 	@BeforeAll
 	static void setUp() throws Exception {
 		ArkhamHorrorApplicationComponentTestBridge.setInstance(DaggerTestApplicationComponent.create());
-		investigatorDao = ArkhamHorrorApplicationComponent.getInstance().arkhamDao();
+		arkhamDao = ArkhamHorrorApplicationComponent.getInstance().arkhamDao();
 		SkillTrack skillTrack = SkillTrack.builder()
 			.withSpeed(new ArrayList<Integer>(Arrays.asList(1,2,3,4)))
 			.withSneak(new ArrayList<Integer>(Arrays.asList(3,2,1,0)))
@@ -66,20 +66,20 @@ class InvestigatorDaoTest {
 
 	@AfterAll
 	static void tearDown() throws Exception {
-		investigatorDao.remove(expansion);
+		arkhamDao.remove(expansion);
 	}
 
 	@Test
 	@Order(1)
 	void testPersist() throws Exception {
-		investigatorDao.persist(expansion);
+		arkhamDao.persist(expansion);
 		assertNotNull(investigator.getId());
 	}
 
 	@Test
 	@Order(2)
 	void testFind() throws Exception {
-		Optional<Investigator> didWeFindIt = investigatorDao.find(Investigator.class, investigator.getId());
+		Optional<Investigator> didWeFindIt = arkhamDao.find(Investigator.class, investigator.getId());
 		Investigator investigatorFound = didWeFindIt.get();
 		assertEquals(investigator, investigatorFound);
 		assertEquals(investigator.hashCode(), investigatorFound.hashCode());
@@ -89,7 +89,7 @@ class InvestigatorDaoTest {
 	@Test
 	@Order(3)
 	void testFindByEntityGraph() throws Exception {
-		Optional<Investigator> findByEntityGraph = investigatorDao.findByEntityGraph(Investigator.class, investigator.getId(), Investigator::addAttributeNodes);
+		Optional<Investigator> findByEntityGraph = arkhamDao.findByEntityGraph(Investigator.class, investigator.getId(), Investigator::addAttributeNodes);
 		Investigator investigatorFound = findByEntityGraph.get();
 		assertEquals(investigator, investigatorFound);
 		assertEquals(investigator.hashCode(), investigatorFound.hashCode());
@@ -100,7 +100,7 @@ class InvestigatorDaoTest {
 	@Order(4)
 	void testMerge() throws Exception {
 		investigator.setHealth(10);
-		Investigator mergedInvestigator = investigatorDao.merge(investigator);
+		Investigator mergedInvestigator = arkhamDao.merge(investigator);
 		
 		assertEquals(investigator, mergedInvestigator);
 		assertNotSame(investigator, mergedInvestigator);
@@ -110,7 +110,7 @@ class InvestigatorDaoTest {
 	@Test
 	@Order(5)
 	void testNotFound() throws Exception {
-		Optional<Investigator> investigator = investigatorDao.find(Investigator.class, UUID.randomUUID());
+		Optional<Investigator> investigator = arkhamDao.find(Investigator.class, UUID.randomUUID());
 		assertFalse(investigator.isPresent());
 	}
 	
@@ -118,7 +118,7 @@ class InvestigatorDaoTest {
 	@Order(6)
 	void testPersistException() throws Exception {
 		assertThrows(ArkhamHorrorDaoException.class, () -> {
-			investigatorDao.persist(investigator);
+			arkhamDao.persist(investigator);
 		});
 	}
 	
