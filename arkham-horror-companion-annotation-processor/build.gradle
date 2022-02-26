@@ -29,12 +29,6 @@ dependencies {
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '_'
 	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '_'
-	// https://mvnrepository.com/artifact/com.google.dagger/dagger
-	implementation group: 'com.google.dagger', name: 'dagger', version: '_'
-
-	// https://mvnrepository.com/artifact/com.google.dagger/dagger-compiler
-	annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '_'
-	testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '_'
 	
 	testImplementation "org.junit.jupiter:junit-jupiter-api:_"
 	testImplementation "org.mockito:mockito-core:_"

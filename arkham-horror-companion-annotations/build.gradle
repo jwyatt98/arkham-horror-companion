@@ -28,12 +28,6 @@ dependencies {
 	implementation group: 'org.ehcache', name: 'ehcache', version: '_'
 	// https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
 	implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '_'
-	// https://mvnrepository.com/artifact/com.google.dagger/dagger
-	implementation group: 'com.google.dagger', name: 'dagger', version: '_'
-
-	// https://mvnrepository.com/artifact/com.google.dagger/dagger-compiler
-	annotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '_'
-	testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '_'
 	
 	testImplementation "org.junit.jupiter:junit-jupiter-api:_"
 	testImplementation "org.mockito:mockito-core:_"
