@@ -59,11 +59,7 @@ eclipse {
 		file.whenMerged { cp ->
 			org.gradle.plugins.ide.eclipse.model.SourceFolder generatedMainSource = new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main', null)
 			generatedMainSource.entryAttributes['ignore_optional_problems'] = 'true'
-			org.gradle.plugins.ide.eclipse.model.SourceFolder generatedTestSource = new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/test', 'bin/generated/test')
-			generatedTestSource.entryAttributes['ignore_optional_problems'] = 'true'
-			generatedTestSource.entryAttributes['test'] = 'true'
 			cp.entries.add(generatedMainSource)
-			cp.entries.add(generatedTestSource)
 		}
 	}
 }
