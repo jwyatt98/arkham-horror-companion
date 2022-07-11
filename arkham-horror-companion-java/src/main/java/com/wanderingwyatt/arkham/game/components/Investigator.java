@@ -2,13 +2,13 @@ package com.wanderingwyatt.arkham.game.components;
 
 import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
 import com.wanderingwyatt.arkham.dao.converter.SkillTrackConverter;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityGraph;
 import java.util.Objects;
 import javax.annotation.Generated;
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EntityGraph;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

@@ -1,9 +1,9 @@
 package com.wanderingwyatt.arkham.dao;
 
 import com.wanderingwyatt.arkham.game.components.Identifiable;
+import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.EntityManagerFactory;
 
 public class ArkhamHorrorDao implements PersistenceDaoManager {
 	private final EntityManagerFactory entityManagerFactory;

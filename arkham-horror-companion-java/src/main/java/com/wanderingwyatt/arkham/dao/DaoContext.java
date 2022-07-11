@@ -1,15 +1,15 @@
 package com.wanderingwyatt.arkham.dao;
 
 import com.wanderingwyatt.arkham.game.components.Identifiable;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 
 public class DaoContext implements AutoCloseable, PersistenceDao {
 	private final EntityManager entityManager;
