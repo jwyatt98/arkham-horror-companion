@@ -1,9 +1,9 @@
 package com.wanderingwyatt.arkham.dao;
 
 import com.wanderingwyatt.arkham.game.components.Identifiable;
+import jakarta.persistence.EntityGraph;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.EntityGraph;
 
 public interface PersistenceDao {
 

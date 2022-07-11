@@ -3,7 +3,7 @@ package com.wanderingwyatt.arkham.server;
 import com.wanderingwyatt.arkham.dao.ArkhamHorrorDaoModule;
 import com.wanderingwyatt.arkham.dao.PersistenceDaoManager;
 import com.wanderingwyatt.arkham.modules.generated.CacheConfigurer;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
