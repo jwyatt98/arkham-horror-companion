@@ -16,19 +16,15 @@ repositories {
 
 dependencies {
 	implementation project(':arkham-horror-companion-annotations')
+
+	implementation libs.bundles.logging
+
 	// https://mvnrepository.com/artifact/javax.cache/cache-api
 	implementation group: 'javax.cache', name: 'cache-api', version: '_'
 	// https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
 	implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '_'
 	// https://mvnrepository.com/artifact/org.apache.velocity/velocity-engine-core
 	implementation group: 'org.apache.velocity', name: 'velocity-engine-core', version: '_'
-	// Logging
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '_'
-  	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '_'
-	// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '_'
-	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-	implementation group: 'org.slf4j', name: 'slf4j-api', version: '_'
 	
 	testImplementation "org.junit.jupiter:junit-jupiter-api:_"
 	testImplementation "org.mockito:mockito-core:_"

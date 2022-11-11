@@ -8,7 +8,20 @@ pluginManagement {
 
 plugins {
     // See https://jmfayard.github.io/refreshVersions
-    id 'de.fayard.refreshVersions' version '0.40.2'
+    id 'de.fayard.refreshVersions' version '0.51.0'
+}
+
+dependencyResolutionManagement {
+	versionCatalogs {
+		libs {
+			library('log4j-api', 'org.apache.logging.log4j:log4j-api:_')
+			library('log4j-core', 'org.apache.logging.log4j:log4j-core:_')
+			library('log4j-slf4j-impl', 'org.apache.logging.log4j:log4j-slf4j-impl:_')
+			library('slf4j-api', 'org.slf4j:slf4j-api:_')
+
+			bundle('logging', ['log4j-api', 'log4j-core', 'log4j-slf4j-impl', 'slf4j-api'])
+		}
+	}
 }
 
 rootProject.name = 'arkham-horror-companion'
