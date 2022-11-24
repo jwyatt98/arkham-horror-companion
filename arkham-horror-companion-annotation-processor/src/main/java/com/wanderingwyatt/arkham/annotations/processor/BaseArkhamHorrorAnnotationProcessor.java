@@ -16,37 +16,32 @@ import javax.lang.model.util.Types;
 public abstract class BaseArkhamHorrorAnnotationProcessor extends AbstractProcessor {
 
 	public Optional<AnnotationMirror> getAnnotationMirror(final Element element, final Class<? extends Annotation> annotationClass) {
-	    final var annotationClassName = annotationClass.getName();
-	    return element.getAnnotationMirrors().stream()
-	        .filter( m -> m.getAnnotationType().toString().equals( annotationClassName )).map(AnnotationMirror.class::cast)
-	        .findFirst();
+		final var annotationClassName = annotationClass.getName();
+		return element.getAnnotationMirrors().stream()
+				.filter( m -> m.getAnnotationType().toString().equals( annotationClassName ))
+				.map(AnnotationMirror.class::cast)
+				.findFirst();
 	}
 
 	public Optional<AnnotationValue> getAnnotationValue(final AnnotationMirror annotationMirror, final String name)	{
-	    final Elements elementUtils = this.processingEnv.getElementUtils();
-	    final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = elementUtils.getElementValuesWithDefaults( annotationMirror );
-	    return elementValues.keySet().stream()
-	        .filter( k -> k.getSimpleName().toString().equals(name))
-	        .map(elementValues::get).map(AnnotationValue.class::cast)
-	        .findAny();
+		final Elements elementUtils = this.processingEnv.getElementUtils();
+		final Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = elementUtils.getElementValuesWithDefaults( annotationMirror );
+		return elementValues.keySet().stream()
+				.filter( k -> k.getSimpleName().toString().equals(name))
+				.map(elementValues::get)
+				.map(AnnotationValue.class::cast)
+				.findAny();
 	}
 
-	public TypeMirror getTypeMirror(TypeElement foo, Class<? extends Annotation> annotationClass) {
-	    Optional<? extends AnnotationMirror> am = getAnnotationMirror(foo, annotationClass);
-	    if(am.isEmpty()) {
-	        return null;
-	    }
-	    AnnotationMirror annotationMirror = am.get();
-	    Optional<? extends AnnotationValue> av = getAnnotationValue(annotationMirror, "key");
-	    if(av.isEmpty()) {
-	        return null;
-	    } else {
-    		return (TypeMirror)av.get().getValue();	    		
-	    }
+	public Optional<TypeMirror> getTypeMirror(TypeElement foo, Class<? extends Annotation> annotationClass) {
+		return getAnnotationMirror(foo, annotationClass)
+				.flatMap(aMirror -> getAnnotationValue(aMirror, "key"))
+				.map(AnnotationValue::getValue)
+				.map(TypeMirror.class::cast);
 	}
 	
-	public TypeElement asTypeElement(TypeMirror typeMirror) {
+	public TypeElement asTypeElement(Optional<TypeMirror> typeMirror) {
 	    Types typeUtils = this.processingEnv.getTypeUtils();
-	    return (TypeElement)typeUtils.asElement(typeMirror);
+	    return TypeElement.class.cast(typeUtils.asElement(typeMirror.orElseThrow()));
 	}
 }

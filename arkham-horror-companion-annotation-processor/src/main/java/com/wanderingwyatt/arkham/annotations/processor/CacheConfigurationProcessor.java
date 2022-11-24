@@ -2,7 +2,6 @@ package com.wanderingwyatt.arkham.annotations.processor;
 
 import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration;
 import com.wanderingwyatt.arkham.annotations.cache.CacheConfiguration.ExpiryPolicy;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,46 +36,44 @@ public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProce
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		String key = "arkham.cache.packageName";
 		String packageLocation = processingEnv.getOptions().get(key);
-		if(!cacheConfigurerFileExists(packageLocation + CACHE_CONFIGURER)) {
-			VelocityEngine ve = new VelocityEngine();
-			ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath"); 
-			ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-			ve.init();
-			Template cacheTemplate = ve.getTemplate("cacheconfigurer.vm");
-			VelocityContext cacheContext = new VelocityContext();
-			cacheContext.put("packageName", packageLocation);
-			for (TypeElement annotation : annotations) {
-				Set<? extends Element> cacheableElements = roundEnv.getElementsAnnotatedWith(annotation);
-				
-				Set<String> classImports = cacheableElements.stream().map(cacheableElement -> ((TypeElement) cacheableElement).getQualifiedName().toString())
-					.collect(Collectors.toSet());
-				Set<CacheInformation> cacheTypes = new HashSet<>();
-				cacheContext.put("classImports", classImports);
-				cacheableElements.forEach(cacheableElement -> {
-					CacheConfiguration cacheConfigurationAnnotation = cacheableElement.getAnnotation(CacheConfiguration.class);
-					CacheInformation cacheInformation = new CacheInformation();
-					cacheInformation.cacheName = cacheConfigurationAnnotation.cacheName();
-					cacheInformation.cacheType = cacheableElement.getSimpleName().toString();
-					cacheInformation.keyType = asTypeElement(getTypeMirror((TypeElement)cacheableElement, CacheConfiguration.class)).getSimpleName().toString();
-					cacheInformation.setExpiryPolicy(cacheConfigurationAnnotation.expiryPolicy());
-					cacheInformation.timeUnit = cacheConfigurationAnnotation.timeUnit();
-					cacheInformation.length = cacheConfigurationAnnotation.length();
-					cacheTypes.add(cacheInformation);
-				});
-				
-				cacheContext.put("cacheInformation", cacheTypes);
-			}
-			
-			try {
+		try {
+			if(!cacheConfigurerFileExists(packageLocation + CACHE_CONFIGURER)) {
+				VelocityEngine ve = new VelocityEngine();
+				ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+				ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+				ve.init();
+				Template cacheTemplate = ve.getTemplate("cacheconfigurer.vm");
+				VelocityContext cacheContext = new VelocityContext();
+				cacheContext.put("packageName", packageLocation);
+				for (TypeElement annotation : annotations) {
+					Set<? extends Element> cacheableElements = roundEnv.getElementsAnnotatedWith(annotation);
+					Set<String> classImports = cacheableElements.stream().map(cacheableElement -> ((TypeElement) cacheableElement).getQualifiedName().toString())
+						.collect(Collectors.toSet());
+					Set<CacheInformation> cacheTypes = new HashSet<>();
+					cacheContext.put("classImports", classImports);
+					cacheableElements.forEach(cacheableElement -> {
+						CacheConfiguration cacheConfigurationAnnotation = cacheableElement.getAnnotation(CacheConfiguration.class);
+						CacheInformation cacheInformation = new CacheInformation();
+						cacheInformation.cacheName = cacheConfigurationAnnotation.cacheName();
+						cacheInformation.cacheType = cacheableElement.getSimpleName().toString();
+						cacheInformation.keyType = asTypeElement(getTypeMirror((TypeElement)cacheableElement, CacheConfiguration.class)).getSimpleName().toString();
+						cacheInformation.setExpiryPolicy(cacheConfigurationAnnotation.expiryPolicy());
+						cacheInformation.timeUnit = cacheConfigurationAnnotation.timeUnit();
+						cacheInformation.length = cacheConfigurationAnnotation.length();
+						cacheTypes.add(cacheInformation);
+					});
+					cacheContext.put("cacheInformation", cacheTypes);
+				}
+
 				JavaFileObject cacheConfigurerJavaFile = processingEnv.getFiler().createSourceFile(packageLocation + CACHE_CONFIGURER);
 				Writer writer = cacheConfigurerJavaFile.openWriter();
 				cacheTemplate.merge(cacheContext, writer);
 				writer.flush();
 				writer.close();
-			} catch (IOException e) {
-				processingEnv.getMessager().printMessage(Kind.ERROR, e.getMessage());
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			processingEnv.getMessager().printMessage(Kind.ERROR, e.getMessage());
+			e.printStackTrace();
 		}
 		return true;
 	}
