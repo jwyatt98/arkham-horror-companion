@@ -31,7 +31,6 @@ dependencies {
 	testImplementation group: 'com.h2database', name: 'h2', version: '_'
 
 	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:_"
-	testRuntimeOnly "org.apache.logging.log4j:log4j-jul:_"
 }
 
 ext {
@@ -79,6 +78,6 @@ spotbugs {
 
 test {
 	useJUnitPlatform()
-	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
+	systemProperty 'java.util.logging.manager', 'java.util.logging.LogManager'
 	finalizedBy jacocoTestReport
 }

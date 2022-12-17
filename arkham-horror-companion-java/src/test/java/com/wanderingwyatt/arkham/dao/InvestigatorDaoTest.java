@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(OrderAnnotation.class)
 class InvestigatorDaoTest {
+	private static final Logger LOGGER = Logger.getLogger(InvestigatorDaoTest.class.getName());
 	private static final String THE_WRITER = "The Writer";
 	private static final String THE_AUTHOR = "The Author";
 	private static final String SCIENCE_BUILDING = "Science Building";
@@ -32,6 +35,8 @@ class InvestigatorDaoTest {
 	
 	@BeforeAll
 	static void setUp() throws Exception {
+		LogManager.getLogManager().readConfiguration(InvestigatorDaoTest.class.getResourceAsStream("/logging.properties"));
+		LOGGER.info("It's party time");
 		TestDaoModule testDaoModule = new TestDaoModule();
 		arkhamDao = testDaoModule.createPersistenceDaoManager();
 		SkillTrack skillTrack = SkillTrack.builder()

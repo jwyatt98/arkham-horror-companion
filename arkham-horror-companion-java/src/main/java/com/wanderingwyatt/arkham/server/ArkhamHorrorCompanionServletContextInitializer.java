@@ -4,17 +4,17 @@ import com.wanderingwyatt.arkham.dao.ArkhamHorrorDaoModule;
 import com.wanderingwyatt.arkham.dao.PersistenceDaoManager;
 import com.wanderingwyatt.arkham.modules.generated.CacheConfigurer;
 import jakarta.persistence.EntityManagerFactory;
+import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import org.aeonbits.owner.ConfigFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 
 @WebListener
 public class ArkhamHorrorCompanionServletContextInitializer implements ServletContextListener {
 	public static final String APPLICATION_COMPONENT = "applicationComponent";
-	private static final Logger LOGGER = LogManager.getLogger(ArkhamHorrorCompanionServletContextInitializer.class);
+	private static final Logger LOGGER = Logger.getLogger(ArkhamHorrorCompanionServletContextInitializer.class.getName());
 	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {

@@ -39,8 +39,8 @@ public class CacheConfigurationProcessor extends BaseArkhamHorrorAnnotationProce
 		try {
 			if(!cacheConfigurerFileExists(packageLocation + CACHE_CONFIGURER)) {
 				VelocityEngine ve = new VelocityEngine();
-				ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-				ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+				ve.setProperty(RuntimeConstants.RESOURCE_LOADERS, "classpath");
+				ve.setProperty("resource.loader.classpath.class", ClasspathResourceLoader.class.getName());
 				ve.init();
 				Template cacheTemplate = ve.getTemplate("cacheconfigurer.vm");
 				VelocityContext cacheContext = new VelocityContext();
